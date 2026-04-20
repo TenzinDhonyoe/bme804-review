@@ -1,0 +1,2301 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>BME804 Review</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" />
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<style>
+:root{
+  --paper:#faf8f3; --ink:#1a1a1a; --muted:#6b6257; --rule:#e8e2d6;
+  --accent:#b8451f; --accent-soft:#f3e6dd; --mark:#fff3c4;
+  --serif:Charter,"Iowan Old Style","Source Serif Pro",Georgia,"Times New Roman",serif;
+  --sans:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Helvetica Neue",sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+html.dark{
+  --paper:#171410; --ink:#eae2d4; --muted:#a79f94; --rule:#2a241c;
+  --accent:#e88a5c; --accent-soft:#2c1f16; --mark:#4a3a10;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--paper);color:var(--ink)}
+body{font-family:var(--serif);font-size:17px;line-height:1.65;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline;text-underline-offset:3px}
+
+/* Layout */
+.shell{display:grid;grid-template-columns:260px minmax(0,1fr);max-width:1160px;margin:0 auto}
+@media(max-width:900px){.shell{grid-template-columns:1fr}.side{display:none}.side.open{display:block;position:fixed;inset:0;z-index:50;background:var(--paper);padding:16px 20px;overflow:auto}}
+
+/* Top bar */
+header{position:sticky;top:0;z-index:40;background:color-mix(in oklab,var(--paper) 94%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--rule)}
+.bar{max-width:1160px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:14px;font-family:var(--sans)}
+.title{font-family:var(--sans);font-size:14px;font-weight:600;letter-spacing:.01em}
+.title .sub{color:var(--muted);font-weight:400;margin-left:6px}
+.bar .spacer{flex:1}
+.bar button,.bar .kbd{font-family:var(--sans);font-size:13px;background:transparent;border:1px solid var(--rule);color:var(--ink);padding:6px 10px;border-radius:6px;cursor:pointer}
+.bar button:hover{border-color:var(--ink)}
+.kbd{color:var(--muted);display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+.kbd b{font-family:var(--mono);font-weight:500;font-size:12px}
+.menu-btn{display:none}
+@media(max-width:900px){.menu-btn{display:inline-block}}
+
+/* Sidebar */
+.side{position:sticky;top:53px;align-self:start;max-height:calc(100vh - 53px);overflow:auto;padding:28px 20px 60px 24px;font-family:var(--sans);font-size:13.5px;border-right:1px solid var(--rule)}
+.side .grp{margin:2px 0 10px}
+.side .grp h4{margin:14px 0 2px;font-size:11px;text-transform:uppercase;letter-spacing:.12em;font-weight:600}
+.side .grp h4 a{display:block;padding:5px 8px;border-radius:5px;color:var(--muted);text-decoration:none;line-height:1.4}
+.side .grp h4 a:hover{color:var(--ink);background:var(--accent-soft)}
+.side .grp.active h4 a{color:var(--accent)}
+.side .grp > a{display:none;padding:4px 8px 4px 18px;border-radius:4px;color:var(--ink);line-height:1.45;font-size:13px;text-decoration:none}
+.side .grp.active > a{display:block}
+.side .grp > a:hover{background:var(--accent-soft);text-decoration:none}
+.side .grp > a.active{color:var(--accent);font-weight:600}
+main > section.topic-hidden{display:none}
+
+/* Main */
+main{padding:40px 52px 120px;min-width:0}
+@media(max-width:900px){main{padding:24px 20px 80px}}
+.lede{max-width:68ch}
+h1{font-family:var(--sans);font-weight:700;font-size:32px;letter-spacing:-.01em;margin:0 0 8px}
+h2{font-family:var(--sans);font-weight:700;font-size:22px;letter-spacing:-.01em;margin:56px 0 10px;padding-top:18px;border-top:1px solid var(--rule)}
+h3{font-family:var(--sans);font-weight:600;font-size:16px;margin:24px 0 6px}
+p.sub{color:var(--muted);font-size:15px;margin:2px 0 0;font-family:var(--sans)}
+section > .intro{color:var(--muted);margin:2px 0 8px;max-width:68ch}
+
+/* Content blocks */
+.block{margin:14px 0;max-width:72ch}
+.block p,.block ul,.block ol{max-width:72ch}
+.block ul{padding-left:22px;margin:8px 0}
+.block li{margin:4px 0}
+.block li b{font-weight:600}
+.block .def{color:var(--muted);font-style:italic;margin:0 0 6px;font-size:16px}
+
+.eq{font-family:var(--serif);padding:10px 14px;margin:10px 0;background:var(--accent-soft);border-radius:4px;overflow-x:auto;font-size:15.5px}
+.eq .katex{font-size:1.05em}
+
+.note{border-left:3px solid var(--accent);padding:4px 12px;margin:10px 0;color:var(--ink);font-size:15.5px}
+.note b{font-weight:600}
+.note.warn{border-color:#c98a2b}
+.note.danger{border-color:#c0392b}
+
+table{width:100%;border-collapse:collapse;margin:12px 0;font-family:var(--sans);font-size:14px;max-width:72ch}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font-weight:600;color:var(--muted);background:transparent;border-bottom:1.5px solid var(--ink)}
+tr:hover td{background:var(--accent-soft)}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:22px;max-width:72ch}
+@media(max-width:700px){.grid2{grid-template-columns:1fr}}
+
+/* Flashcards — click to reveal */
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0;max-width:72ch}
+@media(max-width:700px){.cards{grid-template-columns:1fr}}
+.fc{border:1px solid var(--rule);border-radius:6px;padding:12px 14px;cursor:pointer;background:var(--paper);font-family:var(--sans);font-size:14px;line-height:1.5}
+.fc .q{font-weight:600;color:var(--ink)}
+.fc .a{color:var(--muted);margin-top:6px;filter:blur(5px);transition:filter .18s;user-select:none}
+.fc.open .a{filter:none;user-select:text}
+.fc .hint{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:6px;font-weight:500}
+.fc.open .hint{visibility:hidden}
+
+/* Quiz */
+.quiz{max-width:72ch;font-family:var(--sans)}
+.q-item{border-bottom:1px solid var(--rule);padding:18px 0}
+.q-item:last-child{border-bottom:none}
+.q-num{color:var(--muted);font-size:13px;letter-spacing:.05em}
+.q-text{font-size:16px;font-weight:500;margin:4px 0 10px;color:var(--ink)}
+.opts{display:grid;gap:6px}
+.opts button{text-align:left;background:transparent;border:1px solid var(--rule);color:var(--ink);padding:9px 12px;border-radius:5px;cursor:pointer;font:inherit;font-size:14.5px}
+.opts button:hover:not(:disabled){border-color:var(--ink)}
+.opts button.correct{background:color-mix(in oklab,#2e8b57 18%,transparent);border-color:#2e8b57}
+.opts button.wrong{background:color-mix(in oklab,#c0392b 16%,transparent);border-color:#c0392b}
+.opts button:disabled{cursor:default}
+.exp{margin-top:10px;color:var(--muted);font-size:14px;padding-left:12px;border-left:2px solid var(--rule);display:none}
+.q-item.answered .exp{display:block}
+.score{position:sticky;top:53px;background:var(--paper);padding:14px 0 10px;border-bottom:1px solid var(--rule);margin-bottom:8px;display:flex;align-items:center;gap:14px;font-family:var(--sans);font-size:13px;z-index:5}
+.score .meter{flex:1;height:4px;background:var(--rule);border-radius:999px;overflow:hidden}
+.score .meter span{display:block;height:100%;background:var(--accent);width:0;transition:width .25s}
+.score button{background:transparent;border:1px solid var(--rule);color:var(--muted);padding:4px 10px;border-radius:4px;cursor:pointer;font:inherit}
+
+/* Search palette */
+.palette{position:fixed;inset:0;background:rgba(20,15,8,.35);z-index:100;display:none;align-items:flex-start;justify-content:center;padding-top:14vh}
+.palette.open{display:flex}
+.palette .box{background:var(--paper);border:1px solid var(--rule);border-radius:10px;width:min(640px,92vw);max-height:70vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 30px 80px rgba(0,0,0,.2)}
+.palette input{width:100%;padding:16px 18px;border:none;outline:none;background:transparent;color:var(--ink);font:500 16px var(--sans);border-bottom:1px solid var(--rule)}
+.palette .results{overflow:auto;font-family:var(--sans);font-size:14px}
+.palette .results a{display:block;padding:10px 18px;color:var(--ink);border-bottom:1px solid var(--rule)}
+.palette .results a:hover,.palette .results a.sel{background:var(--accent-soft);text-decoration:none}
+.palette .results .tag{color:var(--muted);font-size:12px;margin-right:8px}
+.palette .results em{background:var(--mark);font-style:normal;padding:0 1px}
+.palette .empty{padding:20px;color:var(--muted);text-align:center}
+
+mark{background:var(--mark);color:var(--ink);padding:0 2px}
+.hidden{display:none!important}
+footer{max-width:72ch;margin-top:80px;padding-top:18px;border-top:1px solid var(--rule);color:var(--muted);font-size:13px;font-family:var(--sans)}
+
+/* Utilities */
+ul.tight li{margin:2px 0}
+.inline-code{font-family:var(--mono);font-size:.92em;background:var(--accent-soft);padding:1px 6px;border-radius:3px}
+
+@media print{
+  header,.side,.palette{display:none!important}
+  .shell{grid-template-columns:1fr}
+  main{padding:0}
+  h2{page-break-before:auto}
+  .fc .a{filter:none!important}
+}
+
+/* Interactive widgets */
+.lab{border:1px solid var(--rule);border-radius:10px;padding:18px 20px;margin:18px 0;max-width:72ch;background:color-mix(in oklab,var(--accent-soft) 30%,var(--paper));font-family:var(--sans)}
+.lab h5{margin:0 0 14px;font-size:13px;font-weight:600;color:var(--ink);display:flex;align-items:center;gap:8px;text-transform:none;letter-spacing:0}
+.lab h5::before{content:"▸";color:var(--accent);font-size:11px}
+.lab .ctrls{display:grid;grid-template-columns:140px 1fr 96px;gap:10px 14px;align-items:center;font-size:13px;margin-bottom:14px}
+@media(max-width:600px){.lab .ctrls{grid-template-columns:1fr 80px;gap:4px 10px}.lab .ctrls label{grid-column:1/-1;margin-top:4px;font-weight:500}}
+.lab label{color:var(--muted)}
+.lab input[type=range]{width:100%;accent-color:var(--accent);cursor:pointer;height:4px}
+.lab select,.lab input[type=number],.lab input[type=text]{font:inherit;padding:5px 8px;border:1px solid var(--rule);border-radius:4px;background:var(--paper);color:var(--ink);width:100%}
+.lab .v{font-family:var(--mono);font-size:13px;text-align:right;color:var(--ink);white-space:nowrap}
+.lab .view{margin:8px 0;display:flex;align-items:center;justify-content:center;min-height:60px}
+.lab .out{font-family:var(--mono);font-size:13.5px;background:var(--paper);padding:10px 14px;border-radius:6px;border:1px solid var(--rule);line-height:1.7;color:var(--ink)}
+.lab .out b{color:var(--accent);font-weight:600}
+.lab .out small{color:var(--muted);font-size:11.5px;font-family:var(--sans);display:block;margin-top:4px}
+.lab .tip{font-size:12.5px;color:var(--muted);margin-top:10px;line-height:1.5}
+.lab .tabs{display:flex;gap:4px;margin-bottom:12px;flex-wrap:wrap}
+.lab .tabs button{font:inherit;font-size:12.5px;background:var(--paper);border:1px solid var(--rule);color:var(--ink);padding:5px 12px;border-radius:999px;cursor:pointer}
+.lab .tabs button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.lab .btn{font:inherit;font-size:13px;background:var(--accent);color:#fff;border:none;padding:6px 14px;border-radius:4px;cursor:pointer}
+.lab .btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--rule)}
+.lab .btn[disabled]{opacity:.5;cursor:default}
+.lab canvas,.lab svg{display:block;max-width:100%;height:auto}
+.lab .warn{color:#c0392b;font-weight:600}
+html.dark .lab .warn{color:#ff8b6b}
+.lab .good{color:#1f7a4c;font-weight:600}
+html.dark .lab .good{color:#7ed3a7}
+.lab .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.lab .pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:11px;color:var(--ink);background:var(--accent-soft);border:1px solid var(--rule)}
+.lab .bigval{font-family:var(--mono);font-size:22px;color:var(--accent);font-weight:600}
+.lab .legend{display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;color:var(--muted);margin-top:6px}
+.lab .legend span{display:inline-flex;align-items:center;gap:5px}
+.lab .legend i{width:10px;height:10px;border-radius:2px;display:inline-block}
+
+/* Retrieval prompts */
+.recall{border:1px dashed var(--rule);border-radius:8px;padding:12px 14px;margin:16px 0;max-width:72ch;font-family:var(--sans);font-size:14px;background:transparent;cursor:pointer;transition:background .15s, border-color .15s}
+.recall:hover{border-color:var(--accent)}
+.recall.open{border-style:solid;border-color:var(--accent);background:color-mix(in oklab,var(--accent-soft) 60%,transparent);cursor:default}
+.recall .q{color:var(--ink);font-weight:500;line-height:1.5}
+.recall .q::before{content:"⚡ Quick check · ";color:var(--accent);font-weight:600;font-size:12px;letter-spacing:.02em;text-transform:uppercase}
+.recall .ans{color:var(--muted);margin-top:10px;font-size:13.5px;line-height:1.6;display:none}
+.recall.open .ans{display:block}
+.recall .hint{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:8px;font-weight:500}
+.recall.open .hint{display:none}
+.recall .score{display:none;gap:6px;margin-top:10px}
+.recall.open .score{display:flex}
+.recall .score button{flex:1;border:1px solid var(--rule);background:var(--paper);color:var(--ink);padding:5px 0;border-radius:4px;font:inherit;font-size:12px;cursor:pointer}
+.recall .score button:hover{border-color:var(--ink)}
+.recall.got{opacity:.55;border-color:#229954;border-style:solid}
+.recall.got .q::before{content:"✓ Recalled · "}
+
+/* Flashcard mastery */
+.fc{position:relative}
+.fc .mstr{display:none;gap:6px;margin-top:10px}
+.fc.open .mstr{display:flex}
+.fc .mstr button{flex:1;border:1px solid var(--rule);background:var(--paper);color:var(--ink);padding:5px 0;border-radius:4px;font:inherit;font-size:12px;cursor:pointer}
+.fc .mstr button:hover{border-color:var(--ink)}
+.fc.got{opacity:.5}
+.fc.got::after{content:"✓";position:absolute;top:8px;right:10px;color:#229954;font-weight:600;font-size:13px}
+.fc.hidden-by-filter{display:none}
+
+.deck-ctrl{display:flex;gap:10px;align-items:center;margin:10px 0 2px;font-family:var(--sans);font-size:12.5px;color:var(--muted);max-width:72ch}
+.deck-ctrl .count{margin-left:auto;font-family:var(--mono);font-size:12px}
+.deck-ctrl button{background:transparent;border:1px solid var(--rule);color:var(--ink);padding:4px 10px;border-radius:999px;cursor:pointer;font:inherit;font-size:12px}
+.deck-ctrl button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+/* Top-bar progress pill */
+.pill-pr{display:inline-flex;gap:6px;align-items:center;padding:4px 10px;border-radius:999px;border:1px solid var(--rule);font-size:12px;color:var(--muted);font-family:var(--sans)}
+.pill-pr b{color:var(--accent);font-weight:600}
+.pill-pr .bar{display:inline-block;width:60px;height:4px;background:var(--rule);border-radius:999px;overflow:hidden}
+.pill-pr .bar span{display:block;height:100%;width:0;background:var(--accent);transition:width .3s}
+
+/* Quiz controls */
+.quiz-ctrl{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0;padding:10px 0;font-family:var(--sans);font-size:12.5px;border-bottom:1px solid var(--rule)}
+.quiz-ctrl button{background:transparent;border:1px solid var(--rule);color:var(--ink);padding:4px 12px;border-radius:999px;cursor:pointer;font:inherit;font-size:12.5px}
+.quiz-ctrl button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.q-item.hidden-by-filter{display:none}
+.q-item button[data-j]:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* Help overlay */
+.help{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;display:none;align-items:center;justify-content:center}
+.help.open{display:flex}
+.help .box{background:var(--paper);border:1px solid var(--rule);border-radius:10px;padding:24px 28px;max-width:460px;font-family:var(--sans);font-size:13.5px;box-shadow:0 30px 80px rgba(0,0,0,.25)}
+.help h4{margin:0 0 14px;font-size:15px;font-family:var(--sans)}
+.help dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:8px 14px;color:var(--ink)}
+.help dt{font-family:var(--mono);font-size:12px;background:var(--accent-soft);padding:2px 8px;border-radius:4px;border:1px solid var(--rule);align-self:start;white-space:nowrap}
+.help dd{margin:0;color:var(--muted);font-size:13px}
+.help .close{margin-top:16px;font-size:12px;color:var(--muted);text-align:right}
+
+/* Cheat-sheet mode */
+body.cheat .lede p.sub,body.cheat section > .intro,body.cheat .def,body.cheat .tip,body.cheat .recall,body.cheat .lab,body.cheat .cards,body.cheat .deck-ctrl{display:none!important}
+body.cheat section h3 + .block > ul,body.cheat .block > ul{margin-top:4px}
+body.cheat .block > ul > li > ul{display:none}
+body.cheat .block{margin:6px 0}
+body.cheat h3{margin-top:14px}
+body.cheat .note{padding:4px 10px;margin:6px 0;font-size:13px}
+body.cheat .note small{display:none}
+</style>
+</head>
+<body>
+<header>
+  <div class="bar">
+    <button class="menu-btn" id="menuBtn" aria-label="menu">☰</button>
+    <div class="title">BME804 Review<span class="sub">Design of BioMEMS</span></div>
+    <div class="spacer"></div>
+    <span class="pill-pr" id="progressPill" title="Concepts mastered (click to reset)"><span class="bar"><span id="progressBar"></span></span> <span id="progressTxt"><b>0</b>/0</span></span>
+    <span class="kbd" id="searchOpen" title="Search"><span>Search</span> <b>⌘K</b></span>
+    <button id="cheatBtn" title="Cheat-sheet mode (toggle to compact view for final cram)">Cheat</button>
+    <button id="quizJump" title="Jump to quiz">Quiz</button>
+    <button id="helpBtn" title="Keyboard shortcuts">?</button>
+    <button id="themeBtn" title="Toggle theme">☾</button>
+  </div>
+</header>
+
+<div class="shell">
+<aside class="side" id="side">
+  <nav class="grp" data-topic="act">
+    <h4><a href="#act">Microactuators</a></h4>
+    <a href="#act-specs">Specifications</a>
+    <a href="#act-electrostatic">Electrostatic</a>
+    <a href="#act-piezo">Piezoelectric</a>
+    <a href="#act-mag">Electromagnetic</a>
+    <a href="#act-eap">Electroactive polymers</a>
+    <a href="#act-smp">Thermal / SMA / SMP</a>
+    <a href="#act-drug">Drug delivery</a>
+    <a href="#act-cards">Flashcards</a>
+  </nav>
+  <nav class="grp" data-topic="bio">
+    <h4><a href="#bio">Biosensors &amp; LoC</a></h4>
+    <a href="#bio-anatomy">Biosensor anatomy</a>
+    <a href="#bio-catalytic">Catalytic / non-enzymatic</a>
+    <a href="#bio-affinity">Antibodies &amp; aptamers</a>
+    <a href="#bio-elisa">ELISA</a>
+    <a href="#bio-immob">Immobilization</a>
+    <a href="#bio-transduction">Transduction methods</a>
+    <a href="#bio-loc">Lab-on-chip</a>
+    <a href="#bio-pcr">Microarrays &amp; PCR</a>
+    <a href="#bio-poct">Point-of-care</a>
+    <a href="#bio-cards">Flashcards</a>
+  </nav>
+  <nav class="grp" data-topic="sen">
+    <h4><a href="#sen">Microsensors</a></h4>
+    <a href="#sen-def">Definitions</a>
+    <a href="#sen-specs">Specifications</a>
+    <a href="#sen-thermal">Thermal</a>
+    <a href="#sen-ec">Electrochemical</a>
+    <a href="#sen-optical">Optical</a>
+    <a href="#sen-mech">Mechanical</a>
+    <a href="#sen-extra">Other families</a>
+    <a href="#sen-cards">Flashcards</a>
+  </nav>
+  <nav class="grp" data-topic="sys">
+    <h4><a href="#sys">System Integration</a></h4>
+    <a href="#sys-pack">Packaging considerations</a>
+    <a href="#sys-bond">Bonding processes</a>
+    <a href="#sys-herm">Hermetic packaging</a>
+    <a href="#sys-power">Powering</a>
+    <a href="#sys-wpt">Wireless power</a>
+    <a href="#sys-safe">Safety &amp; SAR</a>
+    <a href="#sys-bio">Biosafety</a>
+    <a href="#sys-cards">Flashcards</a>
+  </nav>
+  <nav class="grp" data-topic="quiz">
+    <h4><a href="#quiz">Self-test</a></h4>
+    <a href="#quiz">30-question quiz</a>
+  </nav>
+</aside>
+
+<main id="main">
+
+<div class="lede">
+  <h1>BME804 · Design of BioMEMS</h1>
+  <p class="sub">A compact review of the four exam topics — microactuators, biosensors &amp; lab-on-chip, microsensors, and system integration. Use <b>⌘K</b> to search. Click flashcards to reveal answers. Quiz at the bottom.</p>
+</div>
+
+<!-- ========================= MICROACTUATORS ========================= -->
+<section id="act">
+  <h2>Microactuators</h2>
+  <p class="intro">An actuator converts electrical, optical, magnetic, or chemical energy into mechanical work — state variables are displacement, force, and velocity. In BioMEMS the same energies directly drive microfluidic valves and pumps, position detectors, and dispense medications.</p>
+
+  <h3 id="act-specs">Specifications — what to spec on every actuator</h3>
+  <div class="block">
+    <div class="grid2">
+      <ul class="tight">
+        <li>Output <b>force</b> &amp; <b>displacement</b> range</li>
+        <li><b>Response time</b></li>
+        <li><b>Energy / power</b></li>
+        <li><b>Stiffness</b>, <b>damping</b></li>
+        <li><b>Accuracy</b> (% of displacement or force)</li>
+      </ul>
+      <ul class="tight">
+        <li><b>Linearity</b>, <b>sensitivity</b></li>
+        <li><b>Size</b>, <b>materials &amp; fabrication</b></li>
+        <li><b>Repeatability</b>, <b>durability</b>, <b>reliability</b></li>
+      </ul>
+    </div>
+    <div class="note"><b>Energy density</b> $E_a=W/V_m=F\cdot d/V_m$ (J/m³). Scale: electrostatic 10³ → magnetic 10⁴ → bimetallic 10⁵ → thermopneumatic 10⁶ → piezoelectric &amp; SMA 10⁷.</div>
+
+    <div class="lab" id="lab-energy">
+      <h5>Energy-density scale — hover a method</h5>
+      <svg width="100%" viewBox="0 0 640 110" id="energySvg" preserveAspectRatio="xMidYMid meet"></svg>
+      <div class="out" id="energyOut">Hover or tap a method to see its typical energy density and what that means in practice.</div>
+    </div>
+  </div>
+
+  <h3 id="act-electrostatic">Electrostatic</h3>
+  <div class="block">
+    <p class="def">Opposite charges on two plates attract → displacement. Basic capacitor physics.</p>
+    <div class="eq">$$F_x^{+}=Q^{+}\tfrac{E}{2}=\tfrac{1}{2}Q\tfrac{V}{x}=\tfrac{1}{2}\tfrac{CV^{2}}{x}=\tfrac{1}{2}\tfrac{\varepsilon_0\varepsilon_r A}{x^{2}}V^{2}$$</div>
+    <ul>
+      <li>Force scales with <b>V²</b>, <b>area A</b>, and <b>1/x²</b>.</li>
+      <li><b>Pull-in voltage</b>: above this the movable plate snaps onto the fixed plate and sticks.</li>
+      <li><b>Comb-drive</b> — interdigitated fingers, <b>in-plane</b> motion (micro-tweezers).</li>
+      <li><b>Micromirror</b> — serpentine springs, <b>out-of-plane</b> motion (light-beam steering).</li>
+    </ul>
+
+    <div class="lab" id="lab-es">
+      <h5>Parallel-plate simulator — feel the V² and 1/x² scaling</h5>
+      <div class="ctrls">
+        <label>Voltage V</label><input type="range" min="0" max="300" value="40" step="1" id="es-v"><div class="v"><span id="es-vv">40</span> V</div>
+        <label>Plate area A</label><input type="range" min="10" max="500" value="100" step="1" id="es-a"><div class="v"><span id="es-aa">100</span> µm²</div>
+        <label>Gap x (initial)</label><input type="range" min="0.5" max="10" value="3" step="0.1" id="es-x"><div class="v"><span id="es-xx">3.0</span> µm</div>
+        <label>Spring k</label><input type="range" min="0.1" max="10" value="1" step="0.1" id="es-k"><div class="v"><span id="es-kk">1.0</span> N/m</div>
+      </div>
+      <div class="view"><svg width="320" height="150" id="es-svg"></svg></div>
+      <div class="out">
+        Force <b id="es-f">—</b> · Deflection <b id="es-def">—</b> · Pull-in V<sub>pi</sub> = <b id="es-vpi">—</b>
+        <small id="es-msg">Pull-in collapses the plates when deflection exceeds <code>x/3</code>. Above V<sub>pi</sub>, the system is unstable.</small>
+      </div>
+      <div class="tip">Try: set V to 40, then double it — watch force quadruple. Cut the gap in half — force quadruples again. That's <em>V² · 1/x²</em> physics you can feel.</div>
+    </div>
+
+    <div class="recall" data-id="r-es-pullin">
+      <div class="q">What physically happens above the pull-in voltage, and why?</div>
+      <div class="hint">Click to reveal</div>
+      <div class="ans">The deflection exceeds one-third of the gap and the restoring spring can no longer balance the electrostatic force, so the movable plate collapses onto the fixed plate and sticks. Below V<sub>pi</sub> the system is stable; above, it's runaway.</div>
+      <div class="score"><button class="got">Got it</button><button class="rev">Review</button></div>
+    </div>
+  </div>
+
+  <h3 id="act-piezo">Piezoelectric</h3>
+  <div class="block">
+    <p class="def">Transduction between mechanical and electrical signals. Charge ↔ strain. Works as sensor or actuator.</p>
+    <div class="eq">$$d_{x,y}=\frac{Q}{\sigma}=\frac{S}{E}\qquad S=d_{x,y}\cdot E=d_{x,y}\cdot\frac{V}{z}$$</div>
+    <ul>
+      <li><b>Direct effect</b>: stress → charge/voltage (sensing).</li>
+      <li><b>Converse effect</b>: voltage → strain (actuating).</li>
+      <li>Strain ∝ electric field; $d$ is a material property in C/N.</li>
+    </ul>
+    <table>
+      <tr><th>Index</th><th>Meaning</th></tr>
+      <tr><td>$d_{33}$</td><td>Strain in direction 3 from field in direction 3 (transverse expansion/contraction)</td></tr>
+      <tr><td>$d_{31}$</td><td>Strain in direction 1 from field in direction 3</td></tr>
+      <tr><td>$d_{15}$</td><td>Shear about direction 2 from field in direction 1 (parallel shear)</td></tr>
+    </table>
+    <table>
+      <tr><th>Material</th><th>$d_{33}$ (pC/N)</th><th>Note</th></tr>
+      <tr><td>PZT ceramic</td><td>~220 (up to 600)</td><td>Contains lead</td></tr>
+      <tr><td>PZT film on Si</td><td>~246</td><td>Integrated MEMS</td></tr>
+      <tr><td>PVDF</td><td>−33</td><td>Polymer</td></tr>
+      <tr><td>ZnO film</td><td>~12</td><td>Lead-free</td></tr>
+      <tr><td>Quartz</td><td>2–3</td><td>Crystal</td></tr>
+      <tr><td>AlN</td><td>~5</td><td>CMOS-compatible</td></tr>
+      <tr><td>BaTiO₃</td><td>200–600</td><td>Ceramic</td></tr>
+    </table>
+    <div class="note"><b>Worked examples.</b> 10 V across a 1 mm PZT film → ΔX = 220 pC/N · 10 V ≈ <b>2.2 nm</b>. $d_{15}$ mode at 10 V on 10 mm wide PZT → ≈ <b>7 nm</b>.</div>
+    <div class="note"><b>PMUTs</b> — Piezoelectric Micromachined Ultrasound Transducers. Current to crystal → vibration → ultrasound waves. Used in medical imaging and steerable probes.</div>
+
+    <div class="lab" id="lab-piezo">
+      <h5>Piezoelectric strain calculator</h5>
+      <div class="ctrls">
+        <label>Material</label>
+        <select id="pz-mat">
+          <option value="220">PZT ceramic (d₃₃=220 pC/N)</option>
+          <option value="246">PZT film on Si (d₃₃=246)</option>
+          <option value="-33">PVDF (d₃₃=−33)</option>
+          <option value="12">ZnO film (d₃₃=12)</option>
+          <option value="5">AlN (d₃₃=5)</option>
+          <option value="2.5">Quartz (d₃₃=2.5)</option>
+          <option value="400">BaTiO₃ (d₃₃=400)</option>
+        </select>
+        <div class="v"><span id="pz-d">220</span> pC/N</div>
+        <label>Voltage V</label><input type="range" min="0" max="200" value="10" step="1" id="pz-v"><div class="v"><span id="pz-vv">10</span> V</div>
+        <label>Thickness L</label><input type="range" min="0.1" max="10" value="1" step="0.05" id="pz-l"><div class="v"><span id="pz-ll">1.00</span> mm</div>
+      </div>
+      <div class="view"><svg width="320" height="90" id="pz-svg"></svg></div>
+      <div class="out">ΔX = d₃₃ · V = <b id="pz-dx">—</b><small>Strain S = d₃₃·(V/L). Total displacement is independent of thickness because S scales with 1/L and length with L.</small></div>
+      <div class="tip">Swap to Quartz — same 10 V gives ~100× less displacement. That's why PZT dominates actuators and Quartz dominates frequency references (its tiny, stable strain is the point).</div>
+    </div>
+
+    <div class="recall" data-id="r-pz-effect">
+      <div class="q">Direct vs converse piezoelectric effect — which is used for sensing, which for actuation, and why?</div>
+      <div class="hint">Click to reveal</div>
+      <div class="ans">Direct effect = mechanical stress → charge/voltage → <b>sensing</b>. Converse effect = applied voltage → strain → <b>actuation</b>. Same crystal, same $d$ constant, two directions. That's why a PMUT can both transmit and receive ultrasound.</div>
+      <div class="score"><button class="got">Got it</button><button class="rev">Review</button></div>
+    </div>
+  </div>
+
+  <h3 id="act-mag">Electromagnetic</h3>
+  <div class="block">
+    <p class="def">Current-carrying conductor in a B-field feels a Lorentz force; ferromagnetic cantilever deflects under magnetic field.</p>
+    <div class="eq">$$F=I\,\ell\sin\vartheta\cdot B,\qquad B=\frac{\mu_0\mu_r N_i I}{\ell}$$</div>
+    <ul>
+      <li>Displacement X ∝ B-field.</li>
+      <li>Needs a solenoid coil (N turns) and a ferromagnetic beam/target.</li>
+    </ul>
+    <div class="note"><b>Soft microrobots.</b> Silicone (Ecoflex) + <b>NdFeB</b> hard-magnetic microparticles (~5 µm). Time-varying external field → multimodal locomotion (rolling/walking). Hu, <i>Nature Letters</i> 2018.</div>
+
+    <div class="lab" id="lab-lorentz">
+      <h5>Lorentz force &amp; solenoid B-field</h5>
+      <div class="ctrls">
+        <label>Current I</label><input type="range" min="0" max="2" value="0.5" step="0.01" id="lz-i"><div class="v"><span id="lz-ii">0.50</span> A</div>
+        <label>Turns N</label><input type="range" min="10" max="1000" value="200" step="10" id="lz-n"><div class="v"><span id="lz-nn">200</span></div>
+        <label>Coil length ℓ</label><input type="range" min="1" max="50" value="10" step="1" id="lz-l"><div class="v"><span id="lz-ll">10</span> mm</div>
+        <label>Rel. permeability μᵣ</label><input type="range" min="1" max="5000" value="1" step="1" id="lz-mu"><div class="v"><span id="lz-mm">1</span></div>
+      </div>
+      <div class="out">B = μ₀μᵣNI/ℓ = <b id="lz-b">—</b> · F = I·ℓ·B = <b id="lz-f">—</b><small>A ferromagnetic core (μᵣ &gt; 1000) multiplies the field by the same factor — this is why solenoids have iron cores.</small></div>
+    </div>
+  </div>
+
+  <h3 id="act-eap">Electroactive Polymers (EAPs)</h3>
+  <div class="block">
+    <p class="def">Soft actuators that change shape in response to an electric field. Used for artificial muscles, bionics, and micro/nanorobots.</p>
+    <ul>
+      <li><b>Electronic EAPs</b>
+        <ul>
+          <li><b>Dielectric Elastomer Actuators (DEAs)</b> — elastomer film between compliant electrodes; E-field creates electrostatic pressure that squeezes the polymer, which <b>expands in the planar direction</b>.</li>
+          <li><b>Ferroelectric polymers</b>.</li>
+        </ul>
+      </li>
+      <li><b>Ionic EAPs (IPMCs)</b> — two metal electrodes either side of an ion-polymer film filled with electrolyte. E-field drives cations toward one plate; cations drag solvent molecules → film bends (<b>biomorph bending</b>).</li>
+    </ul>
+
+    <div class="recall" data-id="r-eap">
+      <div class="q">DEA vs IPMC — which is ionic, what drives the motion, and what kind of motion do you get?</div>
+      <div class="hint">Click to reveal</div>
+      <div class="ans"><b>DEA</b> is <em>electronic</em> — electrostatic pressure squeezes a dielectric elastomer between compliant electrodes; the film expands in the planar direction. <b>IPMC</b> is <em>ionic</em> — an electric field drives cations through an electrolyte-filled polymer; the cations drag solvent, one side swells, and the strip bends (biomorph).</div>
+      <div class="score"><button class="got">Got it</button><button class="rev">Review</button></div>
+    </div>
+  </div>
+
+  <h3 id="act-smp">Thermal, SMAs and shape-memory polymers</h3>
+  <div class="block">
+    <ul>
+      <li><b>SMAs</b> — thermally-induced phase change restores a pre-programmed shape.</li>
+      <li><b>SMPs</b> — switching segments fix "shape B" after extension &amp; cooling; heating above $T_\text{trans}$ relaxes them back. Also light-, electrically-, or environmentally-triggered. High elastic deformation; shape-memory hydrogels are used in biomedicine.</li>
+      <li><b>Thermal transformation</b> — bimetallic bending, thermopneumatic expansion.</li>
+    </ul>
+  </div>
+
+  <h3 id="act-drug">Application — drug delivery</h3>
+  <div class="block">
+    <ul>
+      <li><b>Passive</b> — no energy (diffusion). <b>Active</b> — energy-powered dispensing.</li>
+      <li>Routes: transdermal, subdermal, implanted.</li>
+      <li>Components: reservoirs, microvalves, micropumps, microchannels, ports, microsensors.</li>
+      <li>Apps: pain control, diabetes, ocular disease. Considerations: site, volume, refilling.</li>
+    </ul>
+    <div class="grid2">
+      <div class="note"><b>Microneedles.</b> Transdermal; Si/glass/polymer/PDMS molding. Types: hollow, coated, biodegradable.</div>
+      <div class="note"><b>Passive ocular device.</b> Refillable reservoir; delivery when $P_\text{reservoir}\!>\!P_\text{cannula}$; check valve; 2× PDMS layers; 22.5 µL.</div>
+      <div class="note"><b>Electrolytic pump.</b> RF-controlled electrolysis; bubbles expand the chamber and push drug through the cannula.</div>
+      <div class="note"><b>Piezoelectric pump.</b> Balloon reservoir + PEA driving microchannels via an external coil (wireless).</div>
+      <div class="note"><b>Multi-reservoir implant.</b> Anode caps dissolve on demand to expose individual drug wells (Sutradhar 2016).</div>
+      <div class="note"><b>Hydrogels.</b> pH/glucose-sensitive; swell/shrink to occlude or open ports through an etched Si membrane.</div>
+    </div>
+  </div>
+
+  <h3 id="act-cards">Flashcards</h3>
+  <div class="cards" data-deck="actuators"></div>
+</section>
+
+<!-- ========================= BIOSENSORS ========================= -->
+<section id="bio">
+  <h2>Biosensors &amp; Lab-on-a-Chip</h2>
+  <p class="intro">A biosensor is the interface between an analyte and a transducer. Apps: diabetes and other chronic conditions, cancer &amp; cardiovascular biomarkers, infectious disease, genetics, sweat/performance tracking.</p>
+
+  <h3 id="bio-anatomy">Biosensor anatomy</h3>
+  <div class="block">
+    <ul>
+      <li>Three parts: <b>recognition element + transducer + amplifier</b>.</li>
+      <li>Recognition: enzymes, antibodies, nucleic acids, aptamers.</li>
+      <li>Immunoassays: ELISA, microfluidic, lab-on-a-chip.</li>
+      <li>Transducers: acoustic, piezoelectric, electrical, electromechanical, optical, thermal, mechanical.</li>
+    </ul>
+    <div class="note">Bioreceptors (catalytic / affinity) × Immobilization (physical / chemical) × Transduction (optical / electrochemical) — three axes that define a biosensor.</div>
+  </div>
+
+  <h3 id="bio-catalytic">Catalytic (enzyme-based) vs non-enzymatic</h3>
+  <div class="block">
+    <ul>
+      <li><b>Catalytic</b> — enzymes (e.g. oxidases) accelerate reactions; immobilized on the transducer. <b>Mediators</b> like <b>ferrocene</b> speed the reaction and regenerate the enzyme. Highly specific/sensitive <em>but</em> fragile (T and pH).</li>
+      <li><b>Non-enzymatic</b> — direct adsorption. Lower cost, more stable.
+        <ul>
+          <li><b>Noble metals</b> (Pt, Ni, Ag, Au) — corrosion-resistant; issues: poisoning, pH, biofouling, cost.</li>
+          <li><b>Metal oxides</b> (Co, Cu, Zn) — cheaper.</li>
+          <li><b>Carbon nanomaterials</b> (graphene, CNTs, nanowires) — high electron transfer.</li>
+          <li><b>Molecularly imprinted polymers (MIPs)</b> — hydrogels.</li>
+        </ul>
+      </li>
+    </ul>
+
+    <div class="recall" data-id="r-mediator">
+      <div class="q">What does a mediator (e.g. ferrocene) actually do in an enzyme-based biosensor?</div>
+      <div class="hint">Click to reveal</div>
+      <div class="ans">It shuttles electrons between the enzyme's active site and the electrode, <b>speeding up the reaction</b> and <b>regenerating the enzyme</b> (returning it to its active form). Without a mediator, many enzyme reactions are too slow to give a useful current.</div>
+      <div class="score"><button class="got">Got it</button><button class="rev">Review</button></div>
+    </div>
+  </div>
+
+  <h3 id="bio-affinity">Antibodies &amp; aptamers</h3>
+  <div class="block">
+    <p class="def">Immunosensor signal = change in mass / impedance / optical intensity from antigen–antibody binding.</p>
+    <ul>
+      <li>Antibodies bind antigens through weak, non-covalent forces — <b>van der Waals, electrostatic, hydrogen bonds</b>.</li>
+      <li>Common IgG, IgM, IgA, IgE.</li>
+      <li>Immobilized by physical adsorption or covalent bonds. Challenges: T and pH sensitivity in Ab production.</li>
+      <li>Aptamers are short single-stranded DNA/RNA synthesized via <b>SELEX</b> (pool → incubate → select → elute → amplify → repeat).</li>
+    </ul>
+    <table>
+      <tr><th></th><th>Aptamer</th><th>Antibody</th></tr>
+      <tr><td>Basis</td><td>Nucleic acids</td><td>Proteins</td></tr>
+      <tr><td>Size</td><td>Smaller — crosses cell membrane, filtered fast</td><td>Bigger — hard to cross, slow excretion</td></tr>
+      <tr><td>Stability</td><td>Stable at high T; nuclease-sensitive in serum</td><td>Denatures at high T; stable in serum</td></tr>
+      <tr><td>Immunotoxicity</td><td>Non-toxic</td><td>Possible in some patients</td></tr>
+      <tr><td>Conditions</td><td>Physiological or in-vitro</td><td>Physiological only</td></tr>
+      <tr><td>Cost</td><td>Cheaper — solid-phase synthesis</td><td>More expensive — animal extraction</td></tr>
+      <tr><td>Ethics</td><td>None</td><td>Animals required</td></tr>
+    </table>
+  </div>
+
+  <h3 id="bio-elisa">ELISA</h3>
+  <div class="block">
+    <p class="def">Enzyme-Linked ImmunoSorbent Assay — 96-well plate, Ag-coated, Ag–Ab binding, enzyme-labeled (HRP), chromogenic substrate → colored product; intensity ∝ enzyme concentration. Optical detection.</p>
+    <table>
+      <tr><th>Type</th><th>Pros</th><th>Cons</th></tr>
+      <tr><td><b>Direct</b></td><td>Simple, fast, no 2° cross-reactivity</td><td>High background, no amplification, 1° Ab must be labeled</td></tr>
+      <tr><td><b>Indirect</b></td><td>Signal amplification, flexible (one 2° for many 1°)</td><td>More complex, 2° cross-reactivity</td></tr>
+      <tr><td><b>Sandwich</b></td><td>Very specific &amp; sensitive (two Ab, different epitopes)</td><td>Ag must be large; finding matching Ab pairs is hard</td></tr>
+      <tr><td><b>Competitive</b></td><td>Best for small antigens at low concentration</td><td>More complex, needs inhibitor antigen</td></tr>
+    </table>
+
+    <div class="lab" id="lab-elisa">
+      <h5>ELISA walkthrough — step through the binding sequence</h5>
+      <div class="tabs" id="elisa-tabs">
+        <button data-t="direct" class="on">Direct</button>
+        <button data-t="indirect">Indirect</button>
+        <button data-t="sandwich">Sandwich</button>
+        <button data-t="competitive">Competitive</button>
+      </div>
+      <div class="view"><svg width="100%" viewBox="0 0 480 180" id="elisa-svg" preserveAspectRatio="xMidYMid meet"></svg></div>
+      <div class="row" style="justify-content:space-between;margin-top:6px">
+        <div style="display:flex;gap:8px"><button class="btn ghost" id="elisa-prev">← Back</button><button class="btn" id="elisa-next">Next step →</button></div>
+        <div class="pill" id="elisa-step">Step 1 / —</div>
+      </div>
+      <div class="out" id="elisa-out">—</div>
+    </div>
+
+    <div class="recall" data-id="r-elisa">
+      <div class="q">Which ELISA is best for small antigens at low concentration, and why is sandwich not a good fit?</div>
+      <div class="hint">Click to reveal</div>
+      <div class="ans"><b>Competitive ELISA</b> wins for small antigens at low concentration — the sample antigen competes with a bound antigen for limited Ab binding sites, so even tiny amounts show up as a measurable <em>decrease</em> in signal. <b>Sandwich</b> fails here because the antigen must be large enough for two different antibodies to bind two different epitopes simultaneously.</div>
+      <div class="score"><button class="got">Got it</button><button class="rev">Review</button></div>
+    </div>
+  </div>
+
+  <h3 id="bio-immob">Immobilization</h3>
+  <div class="block">
+    <ul>
+      <li><b>Physical (reversible)</b> — adsorption (vdW, electrostatic, ionic, H-bonds), entrapment (polymerization), encapsulation (semi-permeable shell).</li>
+      <li><b>Chemical (irreversible)</b> — covalent bonding to the surface, or cross-linking into aggregates that bind the surface.</li>
+    </ul>
+  </div>
+
+  <h3 id="bio-transduction">Transduction methods</h3>
+  <div class="block">
+    <div class="grid2">
+      <div>
+        <h4 style="font-family:var(--sans);font-size:14px;margin:0 0 4px">Electrical</h4>
+        <ul class="tight">
+          <li>Amperometry, cyclic voltammetry, potentiometry, impedance.</li>
+          <li><b>ISFETs</b> — ion-sensitive gate; enzymatic reaction modulates source-drain current.</li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="font-family:var(--sans);font-size:14px;margin:0 0 4px">Optical</h4>
+        <ul class="tight">
+          <li><b>Fluorescence</b> — fluorophores (QDs, fluorescent proteins); NIR preferred.</li>
+          <li><b>Chemiluminescence</b> — substrate + enzyme → photon emission (no excitation source).</li>
+          <li><b>Colorimetry</b> — color change via absorbance.</li>
+        </ul>
+      </div>
+    </div>
+    <ul style="margin-top:10px">
+      <li><b>SAW</b> — acoustic wave on piezo substrate; velocity depends on mass loading.</li>
+      <li><b>SPR</b> — incident light excites plasmons at metal/dielectric interface; intensity tracks molecular interactions at the surface.</li>
+    </ul>
+  </div>
+
+  <h3 id="bio-loc">Lab-on-a-chip / µTAS</h3>
+  <div class="block">
+    <p class="def">Whole wet-lab workflow on one chip: sampling → pre-treatment → mixing → reaction → separation → detection → signal processing.</p>
+    <ul>
+      <li>Benefits: multiple functionalities, simultaneous multi-analyte analysis, high-throughput with small sample volumes, portable POC, automation.</li>
+      <li>Apps: DNA/protein sequencing, POC, blood analysis, organs-on-chip, cell culture, single-cell/cellomics, drug discovery.</li>
+      <li>Sample-to-answer capabilities: surface functionalization, reagent integration, sample prep, flow control, transducer integration.</li>
+    </ul>
+    <div class="grid2">
+      <div class="note"><b>Surface modification.</b> Hydrophobic/philic patches, adhesion, active binding agents; traps, DEP cages, wells; prevent biofouling.</div>
+      <div class="note"><b>Reagent integration.</b> On-chip storage (dry spotted / liquid blisters); dispensing via mechanical blisters or thermal one-shot valves.</div>
+      <div class="note"><b>Sample prep.</b> Filtration, DEP, acoustophoresis, pinched flow; micromixers; reservoirs meter volumes.</div>
+      <div class="note"><b>Flow control.</b> Capillary (passive geometry) or active (integrated valves/pumps); drives mixing, washing, incubation.</div>
+    </div>
+  </div>
+
+  <h3 id="bio-pcr">Microarrays and PCR</h3>
+  <div class="block">
+    <ul>
+      <li><b>DNA microarrays.</b> Thousands of known probe sequences; on-chip hybridization. Steps: denature → label (green/red) → bind complementary spots → wash → scan.</li>
+      <li><b>PCR</b> — invented by <b>Kary Mullis, 1983</b>. Exponential DNA amplification. Two primers (forward/reverse).
+        <ul>
+          <li>Three steps: <b>Denaturation → Annealing → Extension</b>.</li>
+          <li>Applications: COVID-19, HIV, Hepatitis B &amp; C.</li>
+        </ul>
+      </li>
+    </ul>
+    <table>
+      <tr><th>On-chip PCR</th><th>Idea</th><th>Trade-off</th></tr>
+      <tr><td><b>Continuous-flow</b></td><td>Fixed T zones, one pass = one cycle</td><td>Faster, no thermal cycling; chip tied to one primer set</td></tr>
+      <tr><td><b>Static-chamber</b></td><td>Heaters cycle through 3 stages</td><td>Slower (passive cooling) but programmable → one chip, many primers</td></tr>
+      <tr><td><b>Droplet-based</b></td><td>Nano/picolitre droplets as isolated reactors</td><td>Parallel cycling of all droplets; complex hardware</td></tr>
+    </table>
+    <div class="note"><b>In-Check System</b> (Petralia SAB 2013) — MEMS chip doing DNA extraction → PCR → microarray hybridization → image acquisition → analysis.</div>
+
+    <div class="lab" id="lab-pcr">
+      <h5>PCR cycle — temperature profile &amp; exponential amplification</h5>
+      <div class="row">
+        <button class="btn" id="pcr-start">▶ Run cycle</button>
+        <button class="btn ghost" id="pcr-reset">Reset</button>
+        <label style="margin-left:auto;font-size:13px">Speed <input type="range" min="0.5" max="4" value="1.5" step="0.1" id="pcr-speed" style="width:100px;vertical-align:middle"></label>
+      </div>
+      <div class="view" style="flex-direction:column;align-items:stretch"><canvas id="pcr-canvas" width="620" height="160" style="width:100%;border:1px solid var(--rule);border-radius:6px;background:var(--paper)"></canvas></div>
+      <div class="out" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;text-align:center">
+        <div><div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">Cycle</div><div class="bigval" id="pcr-cycle">0</div></div>
+        <div><div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">Phase</div><div class="bigval" id="pcr-phase" style="font-size:16px;padding-top:6px">Ready</div></div>
+        <div><div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em">DNA copies (2ⁿ)</div><div class="bigval" id="pcr-copies">1</div></div>
+      </div>
+      <div class="legend"><span><i style="background:#c0392b"></i>Denaturation 95°C</span><span><i style="background:#d68910"></i>Annealing 55°C</span><span><i style="background:#229954"></i>Extension 72°C</span></div>
+      <div class="tip">Each cycle doubles the DNA — 30 cycles = ~10⁹ copies. That's how PCR turns a single strand into a detectable sample.</div>
+    </div>
+
+    <div class="recall" data-id="r-pcr">
+      <div class="q">Name the three PCR steps in order and what happens at each.</div>
+      <div class="hint">Click to reveal</div>
+      <div class="ans"><b>1. Denaturation</b> (~95°C) — H-bonds break, double-stranded DNA separates into two single strands. <b>2. Annealing</b> (~55°C) — primers (forward + reverse) bind their complementary target sites. <b>3. Extension</b> (~72°C) — DNA polymerase extends each primer into a full complementary strand. Each cycle doubles the target — 2ⁿ amplification.</div>
+      <div class="score"><button class="got">Got it</button><button class="rev">Review</button></div>
+    </div>
+  </div>
+
+  <h3 id="bio-poct">Point-of-Care Testing</h3>
+  <div class="block">
+    <ul>
+      <li>Biomarker identification, disposable cartridges, hand-held readout, non- or minimally-invasive, low cost, mobile connectivity.</li>
+      <li>Devices: paper-based microfluidics, lateral-flow, LOC, Lab-on-a-disc (LOAD), microfluidic PCR.</li>
+      <li>Applications: home testing (diabetes), emergency testing, high-risk identification, infectious disease monitoring, low-resource settings.</li>
+    </ul>
+    <div class="grid2">
+      <div class="note"><b>Paper lateral-flow.</b> Sample pad → probe pad (labeled probes bind target) → detection membrane (test + control line) → absorbent pad. Capillary-driven; colorimetric.</div>
+      <div class="note"><b>Microfluidic lateral-flow.</b> Loading pad → self-coalescence module → capillary pump; analytes bind labeled Ab, then immobilized capture Ab.</div>
+      <div class="note"><b>Centrifugal (Lab-on-a-disc).</b> Programmable spinning; centrifugal pumping; multiple assays per disc.</div>
+    </div>
+    <div class="note">Maturity podium: <b>1st POCT/lateral flow · 2nd cell chip / flow cytometry · 3rd organs-on-chip / microarrays</b>.</div>
+
+    <div class="lab" id="lab-lateral">
+      <h5>Lateral-flow assay animation</h5>
+      <div class="row">
+        <button class="btn" id="lf-drop">💧 Drop sample</button>
+        <label style="font-size:13px">Analyte present <input type="checkbox" id="lf-pos" checked style="accent-color:var(--accent);vertical-align:middle"></label>
+        <button class="btn ghost" id="lf-reset" style="margin-left:auto">Reset</button>
+      </div>
+      <div class="view" style="flex-direction:column;align-items:stretch"><canvas id="lf-canvas" width="620" height="140" style="width:100%;border:1px solid var(--rule);border-radius:6px;background:var(--paper)"></canvas></div>
+      <div class="out" id="lf-out">Drop a sample and watch capillary forces pull it across: sample pad → probe pad (labeled Ab binds analyte) → detection membrane (test + control lines) → absorbent pad. Two lines = positive, one line (control only) = negative.</div>
+    </div>
+  </div>
+
+  <h3 id="bio-cards">Flashcards</h3>
+  <div class="cards" data-deck="biosensors"></div>
+</section>
+
+<!-- ========================= MICROSENSORS ========================= -->
+<section id="sen">
+  <h2>Microsensors</h2>
+  <p class="intro">A sensor is a transducer that converts a measurand into a signal. Stimuli: acoustic, biological, chemical, electrical, magnetic, optical, mechanical, radiation, thermal.</p>
+
+  <h3 id="sen-def">Definitions</h3>
+  <div class="block">
+    <ul>
+      <li><b>Sensor = transducer + conditioning.</b> Then ADC → digital processing → DAC → actuator.</li>
+      <li>Classified by measurand, transduction, material, technology, or application.</li>
+    </ul>
+    <div class="eq">Transfer characteristic: $S=a+bX$</div>
+  </div>
+
+  <h3 id="sen-specs">Specifications</h3>
+  <div class="block">
+    <div class="grid2">
+      <div>
+        <h4 style="font-family:var(--sans);font-size:14px;margin:0 0 4px">Static</h4>
+        <ul class="tight">
+          <li><b>Linearity</b> — deviation from straight line.</li>
+          <li><b>Resolution</b> — smallest detectable input change.</li>
+          <li><b>Sensitivity</b> — slope $dS/dX$.</li>
+          <li><b>Selectivity</b> — target / non-target response.</li>
+          <li><b>Dynamic range</b>, <b>noise</b> (thermal, LOD), <b>offset</b>, hysteresis, impedance, efficiency.</li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="font-family:var(--sans);font-size:14px;margin:0 0 4px">Dynamic</h4>
+        <ul class="tight">
+          <li><b>Time constant τ</b> — output reaches 63.2% of a step.</li>
+          <li><b>Settling time</b> — 90% (~3τ).</li>
+          <li><b>Tolerance δ</b>, noise, <b>drift</b>.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <h3 id="sen-thermal">Thermal sensors</h3>
+  <div class="block">
+    <table>
+      <tr><th>Principle</th><th>Realization</th><th>Application</th></tr>
+      <tr><td>Thermoresistive</td><td>Pt film, polySi, metal alloys</td><td>T, ΔT, heat power</td></tr>
+      <tr><td>Thermoelectric</td><td>pSi–Al / polySi–Al / p/nPolySi thermopiles</td><td>T and ΔT</td></tr>
+      <tr><td>Thermoelectronic</td><td>Transistors, diodes</td><td>T and ΔT</td></tr>
+      <tr><td>Pyroelectric</td><td>LiTaO₃ + metal/Si resistors</td><td>Heat power</td></tr>
+      <tr><td>Frequency analog</td><td>SAW oscillators</td><td>T</td></tr>
+    </table>
+    <h4 style="font-family:var(--sans);font-size:14px;margin:14px 0 4px">Thermocouples — Seebeck effect</h4>
+    <div class="eq">$$V_S=(\alpha_A-\alpha_B)\,\Delta T,\qquad \Delta T=T_S-T_\text{REF}$$</div>
+    <table>
+      <tr><th>Type</th><th>Materials</th><th>α (µV/°C)</th><th>Range (°C)</th></tr>
+      <tr><td>E</td><td>Chromel/constantan</td><td>58.70 @ 0°C</td><td>−270 to 1000</td></tr>
+      <tr><td>J</td><td>Iron/constantan</td><td>50.37 @ 0°C</td><td>−210 to 1200</td></tr>
+      <tr><td>K</td><td>Chromel/alumel</td><td>39.48 @ 0°C</td><td>−270 to 1372</td></tr>
+      <tr><td>T</td><td>Copper/constantan</td><td>38.74 @ 0°C</td><td>−270 to 400</td></tr>
+      <tr><td>R</td><td>Pt (10%)-Rh / Pt</td><td>10.19 @ 600°C</td><td>−50 to 1768</td></tr>
+      <tr><td>S</td><td>Pt (13%)-Rh / Pt</td><td>11.35 @ 600°C</td><td>−50 to 1768</td></tr>
+    </table>
+    <h4 style="font-family:var(--sans);font-size:14px;margin:14px 0 4px">Thermodiodes / thermotransistors</h4>
+    <p class="def">p-n diode at constant $I_0$ — forward voltage is directly proportional to absolute T.</p>
+    <div class="eq">$$V_\text{out}=\frac{k_B T}{q}\ln\!\left(\frac{I}{I_S}+1\right)$$</div>
+
+    <div class="lab" id="lab-tc">
+      <h5>Thermocouple output — Seebeck voltage</h5>
+      <div class="ctrls">
+        <label>Type</label>
+        <select id="tc-type">
+          <option value="58.70">E · Chromel/constantan (58.70 µV/°C)</option>
+          <option value="50.37">J · Iron/constantan (50.37)</option>
+          <option value="39.48" selected>K · Chromel/alumel (39.48)</option>
+          <option value="38.74">T · Copper/constantan (38.74)</option>
+          <option value="10.19">R · Pt(10%)-Rh/Pt (10.19)</option>
+          <option value="11.35">S · Pt(13%)-Rh/Pt (11.35)</option>
+        </select>
+        <div class="v"><span id="tc-a">39.48</span> µV/°C</div>
+        <label>Sensing T</label><input type="range" min="-200" max="1300" value="100" step="1" id="tc-ts"><div class="v"><span id="tc-tsv">100</span> °C</div>
+        <label>Reference T</label><input type="range" min="-50" max="200" value="0" step="1" id="tc-tr"><div class="v"><span id="tc-trv">0</span> °C</div>
+      </div>
+      <div class="out">ΔT = <b id="tc-dt">100</b> °C · V<sub>S</sub> = α·ΔT = <b id="tc-v">3.948 mV</b><small>Voltages are tiny — that's why thermocouple circuits need precision amplifiers and cold-junction compensation (isothermal block at T<sub>REF</sub>).</small></div>
+    </div>
+
+    <div class="recall" data-id="r-tau">
+      <div class="q">What does the time constant τ physically mean, and how is settling time related?</div>
+      <div class="hint">Click to reveal</div>
+      <div class="ans">τ is the time for the output to reach <b>63.2%</b> of a step input's final value (first-order system). Settling time (to within ~10%) is approximately <b>3τ</b>; to within 2% it's ~5τ. Small τ = fast sensor.</div>
+      <div class="score"><button class="got">Got it</button><button class="rev">Review</button></div>
+    </div>
+  </div>
+
+  <h3 id="sen-ec">Electrochemical sensors</h3>
+  <div class="block">
+    <h4 style="font-family:var(--sans);font-size:14px;margin:0 0 4px">Potentiometric — Nernst, zero current</h4>
+    <ul>
+      <li>V between working electrode (WE) and reference (RE) at <b>zero current</b> using an Ion-Selective Electrode (ISE).</li>
+      <li>Metal surface exchanges ions with solution until electrochemical potential equalizes.</li>
+    </ul>
+    <div class="eq">$$V_\text{CELL}=E_\text{ISE}-E_\text{REF}+E_j,\qquad E=E^{0'}+\tfrac{RT}{nF}\ln\!\left(\tfrac{C_{ox}}{C_{red}}\right),\qquad V_T=\tfrac{RT}{F}$$</div>
+
+    <div class="lab" id="lab-nernst">
+      <h5>Nernst equation — potentiometric response</h5>
+      <div class="ctrls">
+        <label>[Ox] (M)</label><input type="range" min="-6" max="1" value="-2" step="0.05" id="n-ox"><div class="v">10<sup><span id="n-oxv">−2</span></sup></div>
+        <label>[Red] (M)</label><input type="range" min="-6" max="1" value="-3" step="0.05" id="n-red"><div class="v">10<sup><span id="n-redv">−3</span></sup></div>
+        <label>Temperature T</label><input type="range" min="273" max="373" value="298" step="1" id="n-t"><div class="v"><span id="n-tv">298</span> K</div>
+        <label>Electrons n</label><input type="range" min="1" max="4" value="1" step="1" id="n-n"><div class="v"><span id="n-nv">1</span></div>
+      </div>
+      <div class="out">V<sub>T</sub> = RT/F = <b id="n-vt">25.7 mV</b> · E − E⁰′ = (V<sub>T</sub>/n)·ln([Ox]/[Red]) = <b id="n-e">59 mV</b><small>Per decade of concentration ratio, a 1-electron ion-selective electrode shifts by ~59 mV at room T — the "Nernstian slope".</small></div>
+    </div>
+
+    <div class="lab" id="lab-nyquist">
+      <h5>Randles model → Nyquist plot</h5>
+      <div class="ctrls">
+        <label>R<sub>s</sub> (solution)</label><input type="range" min="1" max="200" value="30" step="1" id="ny-rs"><div class="v"><span id="ny-rsv">30</span> Ω</div>
+        <label>R<sub>CT</sub> (charge-tr)</label><input type="range" min="50" max="2000" value="400" step="10" id="ny-rct"><div class="v"><span id="ny-rctv">400</span> Ω</div>
+        <label>C<sub>DL</sub></label><input type="range" min="-8" max="-4" value="-6" step="0.05" id="ny-cdl"><div class="v">10<sup><span id="ny-cdlv">−6</span></sup> F</div>
+        <label>Warburg σ</label><input type="range" min="0" max="300" value="60" step="5" id="ny-w"><div class="v"><span id="ny-wv">60</span></div>
+      </div>
+      <div class="view"><canvas id="ny-canvas" width="520" height="280" style="width:100%;max-width:520px;border:1px solid var(--rule);border-radius:6px;background:var(--paper)"></canvas></div>
+      <div class="tip">The semicircle diameter = R<sub>CT</sub>. The 45° tail at low frequency = Warburg diffusion. Bigger C<sub>DL</sub> shifts the peak to lower frequency.</div>
+    </div>
+
+    <div class="recall" data-id="r-ifc">
+      <div class="q">In impedance flow cytometry, what does the low-frequency signal tell you vs the high-frequency signal?</div>
+      <div class="hint">Click to reveal</div>
+      <div class="ans"><b>Low f (&lt;1 MHz):</b> ΔZ/Z reflects the <b>cell volume</b> — the cell acts as an insulator blocking current. Use this to separate cells <b>by size</b>. <b>High f:</b> current penetrates the membrane and senses the cytoplasm; ΔZ/Z reflects volume <em>and</em> cytoplasm conductivity. Use this to separate cells <b>by type</b>, even when they're the same size.</div>
+      <div class="score"><button class="got">Got it</button><button class="rev">Review</button></div>
+    </div>
+
+    <h4 style="font-family:var(--sans);font-size:14px;margin:14px 0 4px">Amperometric — 3-electrode cell</h4>
+    <ul>
+      <li>Control amp fixes $V_{WE\text{-}RE}$; ox/redox current between WE and CE; current amplitude → concentration.</li>
+    </ul>
+    <div class="eq">Cottrell: $$i=\frac{nFAC_0\sqrt{D}}{\sqrt{\pi t}}$$</div>
+
+    <h4 style="font-family:var(--sans);font-size:14px;margin:14px 0 4px">Impedimetric — EIS</h4>
+    <p class="def">Low-complexity, low-cost, label-free; measures electrical properties of the interface and medium. Apps: capacitive sensing (cell fingerprinting), impedance flow cytometry, cell growth/contractility, cancer detection, EIT imaging.</p>
+    <div class="eq">$$Z(\omega)=\frac{V(\omega)}{I(\omega)}=\operatorname{Re}\{Z\}+j\operatorname{Im}\{Z\}$$</div>
+    <ul>
+      <li><b>Randles model</b>: $R_s$ (solution), $C_{DL}$ (double layer), $R_{CT}$ (charge transfer), $Z_W$ (Warburg, diffusion).</li>
+      <li>$C_{DL}$ isn't ideal — model as a CPE: $Z_{CPE}=1/[(j\omega)^n C]$, $0\!<\!n\!<\!1$.</li>
+      <li><b>Impedance flow cytometry.</b> Low f (&lt;1 MHz): ΔZ/Z ∝ <b>cell volume</b> (separate by size). High f: ΔZ/Z ∝ volume + cytoplasm conductivity (<b>separate by cell type</b>).</li>
+      <li><b>IDE electrodes.</b> Au/Pt/C on Si/glass/ceramic/plastic/paper; protective layers SU-8, PDMS, PMMA.</li>
+    </ul>
+  </div>
+
+  <h3 id="sen-optical">Optical sensors</h3>
+  <div class="block">
+    <h4 style="font-family:var(--sans);font-size:14px;margin:0 0 4px">Absorption — Beer–Lambert</h4>
+    <div class="eq">$$I=I_0 e^{-\varepsilon C_0 \ell},\qquad A=\varepsilon C_0 \ell=-\ln(I/I_0)$$</div>
+    <div class="note"><b>Pulse oximetry.</b> O₂Hb absorbs more IR; HHb absorbs more red → the Red/IR modulation ratio gives SpO₂.</div>
+    <h4 style="font-family:var(--sans);font-size:14px;margin:14px 0 4px">Chemiluminescence</h4>
+    <ul><li>Light (vis/UV/IR) from a chemical reaction — no excitation source. Detected by CMOS sensors, photomultipliers, CCD.</li></ul>
+    <h4 style="font-family:var(--sans);font-size:14px;margin:14px 0 4px">Fluorescence</h4>
+    <ul>
+      <li>Fluorophore absorbs light, emits at a longer wavelength (<b>Stokes shift</b>, e.g. 488→507 nm).</li>
+      <li>High sensitivity &amp; selectivity; specific excitation/emission spectra.</li>
+    </ul>
+    <div class="note"><b>Implantable O₂ sensor (Lumee / Profusa).</b> <b>Phosphorescence lifetime decay</b> correlates with surrounding O₂ level.</div>
+
+    <div class="lab" id="lab-beer">
+      <h5>Beer–Lambert — light through solution</h5>
+      <div class="ctrls">
+        <label>Molar absorptivity ε</label><input type="range" min="100" max="10000" value="2000" step="50" id="bl-e"><div class="v"><span id="bl-ev">2000</span> M⁻¹cm⁻¹</div>
+        <label>Concentration C₀</label><input type="range" min="0" max="0.01" value="0.001" step="0.0001" id="bl-c"><div class="v"><span id="bl-cv">1.0</span> mM</div>
+        <label>Path length ℓ</label><input type="range" min="0.1" max="5" value="1" step="0.1" id="bl-l"><div class="v"><span id="bl-lv">1.0</span> cm</div>
+      </div>
+      <div class="view"><canvas id="bl-canvas" width="520" height="140" style="width:100%;max-width:520px;border:1px solid var(--rule);border-radius:6px;background:var(--paper)"></canvas></div>
+      <div class="out">Transmittance I/I₀ = <b id="bl-t">—</b> · Absorbance A = εC₀ℓ = <b id="bl-a">—</b><small>Each unit of A means 10× less light gets through. A = 3 → only 0.1% transmittance.</small></div>
+    </div>
+
+    <div class="lab" id="lab-pulse">
+      <h5>Pulse oximetry — Red/IR modulation ratio</h5>
+      <div class="ctrls">
+        <label>Blood SpO₂</label><input type="range" min="70" max="100" value="98" step="1" id="ox-s"><div class="v"><span id="ox-sv">98</span> %</div>
+      </div>
+      <div class="view"><canvas id="ox-canvas" width="520" height="150" style="width:100%;max-width:520px;border:1px solid var(--rule);border-radius:6px;background:var(--paper)"></canvas></div>
+      <div class="out">Red/IR modulation ratio R = <b id="ox-r">—</b> · Reading <b id="ox-read">—</b><small>Oxygenated hemoglobin absorbs more IR; deoxygenated absorbs more red. The pulsatile (AC) signal at each wavelength gives the ratio; lookup table maps R → SpO₂.</small></div>
+    </div>
+  </div>
+
+  <h3 id="sen-mech">Mechanical sensors</h3>
+  <div class="block">
+    <h4 style="font-family:var(--sans);font-size:14px;margin:0 0 4px">Capacitive pressure (membrane)</h4>
+    <div class="eq">$$C(x)=\frac{\varepsilon A}{d-u_z(r)},\;u_z(r)=\frac{P(r_a^2-r^2)^2}{64D},\;u_\text{max}=\frac{P r_a^4}{64D},\;D=\frac{E h^3}{12(1-\nu^2)}$$</div>
+
+    <h4 style="font-family:var(--sans);font-size:14px;margin:14px 0 4px">Piezoresistive</h4>
+    <ul><li>Strain changes resistance — depends on geometry + resistivity; temperature-dependent.</li></ul>
+    <div class="eq">$$R=\frac{\rho L}{A},\qquad G_F=\frac{\Delta R/R}{\Delta L/L}$$</div>
+    <div class="note"><b>Wheatstone bridge.</b> $V\!=\!0$ when all four resistors are equal. $R_1\!=\!R_3$; $R_2$ variable for balance; strain changes $R_G$ → ΔV. <b>Insensitive to temperature.</b></div>
+
+    <div class="lab" id="lab-wb">
+      <h5>Wheatstone bridge — strain to voltage</h5>
+      <div class="ctrls">
+        <label>Supply V<sub>in</sub></label><input type="range" min="1" max="10" value="5" step="0.1" id="wb-v"><div class="v"><span id="wb-vv">5.0</span> V</div>
+        <label>R₁ = R₃</label><input type="range" min="100" max="2000" value="1000" step="10" id="wb-r"><div class="v"><span id="wb-rv">1000</span> Ω</div>
+        <label>R₂ (balance)</label><input type="range" min="100" max="2000" value="1000" step="10" id="wb-r2"><div class="v"><span id="wb-r2v">1000</span> Ω</div>
+        <label>R<sub>G</sub> (gauge)</label><input type="range" min="100" max="2000" value="1000" step="1" id="wb-rg"><div class="v"><span id="wb-rgv">1000</span> Ω</div>
+      </div>
+      <div class="view"><svg width="320" height="200" viewBox="0 0 320 200" id="wb-svg"></svg></div>
+      <div class="out">V<sub>out</sub> = V<sub>in</sub>·(R<sub>G</sub>/(R+R<sub>G</sub>) − R₂/(R+R₂)) = <b id="wb-vo">0 V</b> · <span id="wb-state" class="good">balanced</span><small>When all four are equal the bridge is balanced → V<sub>out</sub>=0. Any strain on R<sub>G</sub> creates ΔV proportional to strain — and resistance drift from temperature cancels in opposite arms.</small></div>
+    </div>
+
+    <h4 style="font-family:var(--sans);font-size:14px;margin:14px 0 4px">Piezoelectric (sensor)</h4>
+    <div class="eq">$$\begin{aligned}D_i&amp;=d_{ij}\sigma_j+\varepsilon_{ii}E_i\\ S_j&amp;=s_{ij}\sigma_j+d_{ij}E_i\end{aligned}$$</div>
+    <ul>
+      <li>σ=0: $D_i=\varepsilon_{ii}E_i,\;S_j=d_{ij}E_i$. E=0: $D_i=d_{ij}\sigma_j,\;S_j=s_{ij}\sigma_j$.</li>
+      <li>Materials: Quartz (2–3 pC/N), PZT (200–600), BaTiO₃ (200–600), ZnO (5–12), AlN (~5). PZT has lead — BioMEMS alternatives: AlN, ZnO, BaTiO₃.</li>
+    </ul>
+
+    <h4 style="font-family:var(--sans);font-size:14px;margin:14px 0 4px">Microcantilevers</h4>
+    <ul>
+      <li><b>Dynamic mode</b> — particles shift resonant frequency (mass change); cell detection, growth monitoring.</li>
+      <li><b>Static mode</b> — surface stress causes deflection (metabolism, growth).</li>
+      <li>Quality factor depends on medium viscosity.</li>
+    </ul>
+    <div class="eq">Resonant: $f_r=\tfrac{1}{2\pi}\sqrt{k/m}\qquad$ Stoney: $\Delta z=\dfrac{3(1-\nu)L^{2}}{E t^{2}}\Delta\sigma$</div>
+
+    <div class="lab" id="lab-cant">
+      <h5>Microcantilever — dynamic (mass-sensing) mode</h5>
+      <div class="ctrls">
+        <label>Spring k</label><input type="range" min="0.01" max="10" value="1" step="0.01" id="ct-k"><div class="v"><span id="ct-kv">1.00</span> N/m</div>
+        <label>Beam mass m</label><input type="range" min="0.1" max="100" value="10" step="0.1" id="ct-m"><div class="v"><span id="ct-mv">10.0</span> ng</div>
+        <label>Added mass Δm</label><input type="range" min="0" max="50" value="0" step="0.1" id="ct-dm"><div class="v"><span id="ct-dmv">0.0</span> ng</div>
+      </div>
+      <div class="view" style="flex-direction:column;align-items:stretch"><canvas id="ct-canvas" width="520" height="150" style="width:100%;max-width:520px;border:1px solid var(--rule);border-radius:6px;background:var(--paper)"></canvas></div>
+      <div class="out">f<sub>r</sub> (bare) = <b id="ct-fr">—</b> · f<sub>r</sub> (loaded) = <b id="ct-fr2">—</b> · Δf = <b id="ct-df">—</b><small>The frequency <em>drop</em> tells you how much mass landed on the beam. Single-cell sensitivity comes from very small m (nano-scale beams).</small></div>
+    </div>
+
+    <div class="recall" data-id="r-cantilever">
+      <div class="q">A cantilever sensor can detect binding in two modes — what does each measure?</div>
+      <div class="hint">Click to reveal</div>
+      <div class="ans"><b>Dynamic mode:</b> the beam is driven at its resonant frequency $f_r=\tfrac{1}{2\pi}\sqrt{k/m}$. Mass landing on the surface increases $m$, so $f_r$ <b>drops</b> — frequency shift measures <b>mass change</b>. <b>Static mode:</b> surface binding creates surface stress Δσ that bends the beam — deflection measures <b>stress change</b> via Stoney's equation. Dynamic is for mass/cells; static is for growth/metabolism.</div>
+      <div class="score"><button class="got">Got it</button><button class="rev">Review</button></div>
+    </div>
+  </div>
+
+  <h3 id="sen-extra">Additional BioMEMS sensor families</h3>
+  <div class="block">
+    <ul class="tight">
+      <li>Microelectrodes &amp; MEAs</li>
+      <li>Nanopores (single-molecule)</li>
+      <li>Pressure sensors, flow sensors</li>
+      <li>ISFETs</li>
+      <li>Biodegradable sensors</li>
+      <li>MEMS accelerometers &amp; gyroscopes</li>
+    </ul>
+  </div>
+
+  <h3 id="sen-cards">Flashcards</h3>
+  <div class="cards" data-deck="sensors"></div>
+</section>
+
+<!-- ========================= SYSTEM INTEGRATION ========================= -->
+<section id="sys">
+  <h2>System Integration — Packaging, Powering, Safety</h2>
+  <p class="intro">Partitioning a BioMEMS device into functional subsystems, assembling them, keeping them hermetic, and powering them safely — for lab-on-chip, POC, wearable, and implantable use.</p>
+
+  <h3 id="sys-pack">Packaging considerations</h3>
+  <div class="block">
+    <ul>
+      <li>Overall size, <b>hermeticity</b> (waterproof), light, T/P/humidity, EM fields &amp; radiation, implant environment (body fluids, gases), <b>biocompatibility</b>, mechanical stress, powering.</li>
+      <li>Heterogeneous / modular (disposable / reusable / degradable); 2D / 2.5D / 3D.</li>
+    </ul>
+  </div>
+
+  <h3 id="sys-bond">Bonding processes</h3>
+  <div class="block">
+    <div class="grid2">
+      <div class="note"><b>Epoxy (adhesive).</b> Cure at 150°C or UV; bond strength sensitive to T and humidity.</div>
+      <div class="note"><b>Fusion / direct.</b> Wafer-to-wafer, no intermediate layer; Si–O, Si–N, Si–Si covalent. Needs <b>T &gt; 1000°C</b> and flat surfaces. Hydrophilic (Si–OH + HO–Si → Si–O–Si + H₂O) or hydrophobic (H/F-terminated Si in vacuum). Plasma-activated: 25–400°C.</div>
+      <div class="note"><b>Anodic.</b> Electrochemical; polarization of glass Na⁺/O⁻; Na⁺ travels to cathode; Si oxidizes to Si–O–Si. <b>180–500°C, 200–1500 V.</b> Can damage ICs — usually MEMS only.</div>
+      <div class="note"><b>Eutectic.</b> Metal thin-film intermediate melts below either constituent. <b>Au/Si (81.4/18.6) → 363°C.</b> Also Al/Ge/Si, Au/SiSn, Au/Ge/Si. Industry standard.</div>
+      <div class="note"><b>Solder.</b> Low T, high strength; interconnects via indium bumps, wire bonding, flip-chip.</div>
+    </div>
+    <h4 style="font-family:var(--sans);font-size:14px;margin:14px 0 4px">Surface forces in wafer bonding</h4>
+    <ul>
+      <li><b>van der Waals</b> — $F_v = A/(6\pi d^3)$; Hamaker constant $A$; includes hydrogen bonds (H–O, H–N, H–F).</li>
+      <li><b>Electrostatic</b> — strongest in ionic materials (glass) → Si–glass anodic bonds.</li>
+      <li><b>Capillary</b> — contact angle + surface tension.</li>
+    </ul>
+    <h4 style="font-family:var(--sans);font-size:14px;margin:14px 0 4px">Wire bonding &amp; flip-chip</h4>
+    <ul>
+      <li><b>Wire bond</b> — die glued to substrate; pads connected to tracks via Au wires. Ball-to-wedge or wedge-to-wedge.</li>
+      <li><b>Flip-chip</b> — solder bumps on die; die flipped onto substrate, flux applied → reflow → pressure + heat. Sequence: fluxing → die placement → reflow → flux cleaning → underfill → cure.</li>
+    </ul>
+
+    <div class="recall" data-id="r-bonding">
+      <div class="q">Which bonding method: needs &gt;1000°C and atomically flat surfaces · needs 200–1500 V and Na⁺ glass · melts below either constituent · uses indium bumps?</div>
+      <div class="hint">Click to reveal</div>
+      <div class="ans"><b>Fusion / direct bonding</b> → &gt;1000°C, flat Si surfaces, forms Si–O–Si chemical bonds. <b>Anodic</b> → 200–1500 V + 180–500°C, Na⁺ drifts in glass to cathode, Si oxidizes. <b>Eutectic</b> → metal thin-film intermediate melts below either constituent (Au/Si = 363°C). <b>Solder / flip-chip</b> → indium bumps form interconnects at low T.</div>
+      <div class="score"><button class="got">Got it</button><button class="rev">Review</button></div>
+    </div>
+  </div>
+
+  <h3 id="sys-herm">Hermetic packaging &amp; encapsulation</h3>
+  <div class="block">
+    <ul>
+      <li>Moisture-free to avoid polarization, metal corrosion, electrolytic conduction.</li>
+      <li>Protect the device from hazards <em>and</em> protect the biology from device hazards (HV, chemistry, heat).</li>
+      <li>Permeability ranking (low → high): <b>Metals &lt; Glasses &lt; Fluoro-carbons &lt; Epoxies &lt; Silicones</b>.</li>
+      <li><b>Integrated micromachining</b> — packaging built into the microfab. Device-specific.</li>
+      <li><b>Post-fabrication packaging</b> — die carriers (plastic/ceramic): rigid, hermetic, reliable.</li>
+      <li><b>3D stacking</b> — reduces footprint; <b>through-substrate vias (TSVs)</b> for chip-to-chip; die-to-die / package-to-package / heterogeneous.</li>
+    </ul>
+  </div>
+
+  <h3 id="sys-power">Powering &amp; energy harvesting</h3>
+  <div class="block">
+    <p class="def">Passive or active; external or implanted; voltage &amp; current requirements, max/avg power, local heating; batteries vs battery-less (wireless, harvesting, scavenging).</p>
+    <ul>
+      <li><b>Thin-film battery</b> — size, lifetime, replacement, toxicity.</li>
+      <li><b>Photovoltaic</b> — pn-junction; photons → electrons; low efficiency; <b>max tissue transmittance in NIR</b>.</li>
+      <li><b>Thermoelectric generators (TEG)</b> — Seebeck across p- and n-type semiconductors; ΔT → voltage; load → current. $\Delta V = \alpha_S \Delta T$.</li>
+      <li><b>Piezoelectric harvesters</b> — V ∝ strain; cantilever / membrane / PZT fibers in PDMS / ZnO nanowires. PZT has <b>lead</b>; alternatives AlN, ZnO, BaTiO₃.</li>
+      <li><b>Glucose/O₂ biofuel cell</b>
+        <div class="eq">Anode: $C_6H_{12}O_6 \rightarrow C_6H_{10}O_6 + 2H^{+}+2e^{-}$<br>Cathode: $O_2 + 4H^{+}+4e^{-}\rightarrow 2H_2O$</div>
+        Considerations: implant site (bloodstream, ISF), enzyme choice and stability, electrode material.
+      </li>
+    </ul>
+  </div>
+
+  <h3 id="sys-wpt">Wireless power transfer</h3>
+  <div class="block">
+    <table>
+      <tr><th>Method</th><th>Field</th><th>Freq</th><th>Directivity</th><th>Range</th><th>Penetrability</th><th>Efficiency</th></tr>
+      <tr><td>Inductive coupling</td><td>Near</td><td>Hz–MHz</td><td>Weak</td><td>Short</td><td>Strong</td><td>High</td></tr>
+      <tr><td>Capacitive coupling</td><td>Near</td><td>Hz–MHz</td><td>Weak</td><td>Short</td><td>Strong</td><td>High</td></tr>
+      <tr><td>RF</td><td>Far</td><td>MHz–GHz</td><td>Medium</td><td>Medium</td><td>Medium</td><td>Medium</td></tr>
+      <tr><td>Microwave</td><td>Far</td><td>GHz–THz</td><td>Strong</td><td>Long</td><td>Weak</td><td>Low</td></tr>
+      <tr><td>Photo-electric (NIR optical)</td><td>Far</td><td>&gt;THz</td><td>Strong</td><td>Long</td><td>Weak</td><td>Low</td></tr>
+      <tr><td>Ultrasound (PMUTs/CMUTs)</td><td>—</td><td>kHz</td><td>Medium</td><td>Long</td><td>Medium</td><td>Low</td></tr>
+    </table>
+    <ul>
+      <li><b>Near-field</b>: inductive (B-field) or capacitive (E-field) coupling.</li>
+      <li><b>Far-field</b>: RF / microwave antennas; or PZT-driven ultrasound through tissue.</li>
+      <li><b>Wireless data.</b> Bidirectional uplink/downlink; data over the power line or dedicated transceiver; narrow or wideband; FCC regulations cover frequency and emission.</li>
+    </ul>
+
+    <div class="lab" id="lab-wpt">
+      <h5>Wireless power methods — radar comparison</h5>
+      <div class="tabs" id="wpt-tabs">
+        <button data-t="0" class="on">Inductive</button>
+        <button data-t="1">Capacitive</button>
+        <button data-t="2">RF</button>
+        <button data-t="3">Microwave</button>
+        <button data-t="4">Optical NIR</button>
+        <button data-t="5">Ultrasound</button>
+      </div>
+      <div class="view"><svg width="320" height="320" viewBox="-160 -160 320 320" id="wpt-svg"></svg></div>
+      <div class="out" id="wpt-out">—</div>
+    </div>
+
+    <div class="recall" data-id="r-wpt">
+      <div class="q">Why do inductive and ultrasound WPT both work well through tissue, while microwave struggles?</div>
+      <div class="hint">Click to reveal</div>
+      <div class="ans">Inductive coupling uses <b>near-field B-fields at low frequency</b> — tissue is effectively transparent to magnetic fields at kHz–MHz, so penetration is strong and efficiency is high. Ultrasound uses <b>mechanical waves</b>, which propagate well through soft tissue (same reason medical imaging works). Microwave is <b>high-frequency EM radiation</b> — water absorbs it strongly (that's how microwave ovens cook), so most of the energy heats the tissue instead of reaching the implant.</div>
+      <div class="score"><button class="got">Got it</button><button class="rev">Review</button></div>
+    </div>
+  </div>
+
+  <h3 id="sys-safe">Safety &amp; regulations</h3>
+  <div class="block">
+    <ul>
+      <li><b>IEEE C95.1-2019</b> — human RF exposure.</li>
+      <li><b>MPE</b> — Maximum Permissible Exposure (W/cm², measured e.g. over 30 min). Depends on RF frequency.</li>
+      <li><b>SAR</b> — Specific Absorption Ratio (W/kg); local tissue temperature rise &lt; <b>1–2°C</b>.</li>
+    </ul>
+    <div class="eq">$$\text{SAR}=\frac{\sigma E^{2}}{\rho}\qquad\sigma:\text{tissue conductivity,}\;\rho:\text{tissue density,}\;E:\text{rms field}$$</div>
+
+    <div class="lab" id="lab-sar">
+      <h5>SAR calculator — tissue exposure safety</h5>
+      <div class="ctrls">
+        <label>Tissue</label>
+        <select id="sar-tissue">
+          <option value="0.6,1020">Muscle (σ=0.6 S/m, ρ=1020 kg/m³)</option>
+          <option value="0.04,911">Fat (σ=0.04, ρ=911)</option>
+          <option value="0.9,1035">Brain (σ=0.9, ρ=1035)</option>
+          <option value="1.2,1060">Blood (σ=1.2, ρ=1060)</option>
+          <option value="0.3,1090">Skin (σ=0.3, ρ=1090)</option>
+        </select>
+        <div class="v" id="sar-mat">0.6 / 1020</div>
+        <label>E (rms)</label><input type="range" min="1" max="500" value="40" step="1" id="sar-e"><div class="v"><span id="sar-ev">40</span> V/m</div>
+      </div>
+      <div class="out">SAR = σE²/ρ = <b id="sar-val">—</b> · FCC whole-body limit 0.08 W/kg · Localized limit 1.6–4 W/kg · <span id="sar-verdict">—</span><small>SAR above ~4 W/kg risks the ≥1–2 °C local temperature rise that the standard forbids.</small></div>
+    </div>
+  </div>
+
+  <h3 id="sys-bio">Biosafety &amp; biocompatibility</h3>
+  <div class="block">
+    <div class="note danger"><b>Do not confuse.</b> <b>Biostability</b> = the material keeps its physical/chemical integrity after implantation. <b>Biocompatibility</b> = the material does not cause harmful biological reactions.</div>
+    <ul>
+      <li>Common materials: Ti, Ir, Co, Au, Pt; Si, SiO₂, Si₃N₄, SiC; PDMS, parylene-C, polyimide.</li>
+      <li>Bioresorbable: Mg, Zn, silk fibroin.</li>
+      <li><b>Inflammatory response.</b>
+        <ul>
+          <li>Foreign-body reaction — non-specific clean-up.</li>
+          <li>Specific immune reaction (T-cells) — depends on materials.</li>
+        </ul>
+      </li>
+      <li><b>Fibrotic encapsulation.</b>
+        <ul>
+          <li>✓ Bioinert reaction; implant fixed in position.</li>
+          <li>✗ Insulation layer alters the electrical properties of the device.</li>
+        </ul>
+      </li>
+    </ul>
+
+    <div class="recall" data-id="r-biocomp">
+      <div class="q">Biostability vs biocompatibility — what's the difference, and why does fibrotic encapsulation have a pro AND a con?</div>
+      <div class="hint">Click to reveal</div>
+      <div class="ans"><b>Biostability</b> = the <em>material</em> stays physically and chemically intact inside the body (doesn't corrode, dissolve, degrade). <b>Biocompatibility</b> = the <em>body</em> doesn't react harmfully to the material. Different failure modes. <b>Fibrotic encapsulation</b>: ✓ bioinert reaction fixes the implant in place (good for stability); ✗ the fibrous capsule is electrically insulating, so recording and stimulation electrodes gradually lose performance.</div>
+      <div class="score"><button class="got">Got it</button><button class="rev">Review</button></div>
+    </div>
+  </div>
+
+  <h3 id="sys-cards">Flashcards</h3>
+  <div class="cards" data-deck="system"></div>
+</section>
+
+<!-- ========================= QUIZ ========================= -->
+<section id="quiz">
+  <h2>Self-test — 30 questions</h2>
+  <p class="intro">Click an answer for instant feedback and an explanation. Answers persist across reloads. Use keys <kbd style="font-family:var(--mono);font-size:12px;background:var(--accent-soft);padding:1px 6px;border-radius:3px;border:1px solid var(--rule)">1</kbd>–<kbd style="font-family:var(--mono);font-size:12px;background:var(--accent-soft);padding:1px 6px;border-radius:3px;border:1px solid var(--rule)">4</kbd> to answer and <kbd style="font-family:var(--mono);font-size:12px;background:var(--accent-soft);padding:1px 6px;border-radius:3px;border:1px solid var(--rule)">n</kbd> to jump to the next unanswered question.</p>
+  <div class="quiz-ctrl" id="quizFilter">
+    <button data-f="all" class="on">All</button>
+    <button data-f="act">Microactuators</button>
+    <button data-f="bio">Biosensors</button>
+    <button data-f="sen">Microsensors</button>
+    <button data-f="sys">System</button>
+    <button data-f="wrong" style="margin-left:auto">Retake wrong only</button>
+    <button data-f="unanswered">Unanswered</button>
+  </div>
+  <div class="score">
+    <div><b id="scoreNum">0 / 0</b> answered</div>
+    <div class="meter"><span id="scoreBar"></span></div>
+    <button id="resetQuiz">Reset</button>
+  </div>
+  <div class="quiz" id="quizBox"></div>
+</section>
+
+<footer>
+  BME804 / BE8102 — Design of BioMEMS. Review notes built from the Winter 2024 / Winter 2026 course slides. Open-book; press <b>⌘K</b> to search.
+</footer>
+
+</main>
+</div>
+
+<!-- help overlay -->
+<div class="help" id="help" role="dialog" aria-label="Keyboard shortcuts">
+  <div class="box">
+    <h4>Keyboard shortcuts</h4>
+    <dl>
+      <dt>⌘K / /</dt><dd>Search everything</dd>
+      <dt>1 – 4</dt><dd>Pick quiz answer</dd>
+      <dt>n / p</dt><dd>Next / previous unanswered quiz question</dd>
+      <dt>Space</dt><dd>Reveal focused flashcard or quick-check</dd>
+      <dt>g g</dt><dd>Go to top</dd>
+      <dt>c</dt><dd>Toggle cheat-sheet mode</dd>
+      <dt>t</dt><dd>Toggle theme</dd>
+      <dt>Esc</dt><dd>Close overlays</dd>
+      <dt>?</dt><dd>This panel</dd>
+    </dl>
+    <p class="close">Click anywhere to close</p>
+  </div>
+</div>
+
+<!-- search palette -->
+<div class="palette" id="palette" role="dialog" aria-label="Search">
+  <div class="box">
+    <input id="palInput" placeholder="Search notes, flashcards, quiz… (Esc to close)" autocomplete="off" spellcheck="false">
+    <div class="results" id="palResults"></div>
+  </div>
+</div>
+
+<script>
+/* ========== flashcards ========== */
+const decks = {
+  actuators:[
+    ['Pull-in voltage?','Voltage at which the movable plate of an electrostatic actuator snaps onto and sticks to the fixed plate.'],
+    ['Comb-drive motion direction','In-plane — interdigitated fingers slide past each other.'],
+    ['Micromirror motion','Out-of-plane — electrostatic pull with serpentine springs.'],
+    ['F for parallel plate','F = ½·ε₀εᵣA·V²/x² — scales with V², A, 1/x².'],
+    ['Direct vs converse piezo','Direct: stress → charge (sensor). Converse: voltage → strain (actuator).'],
+    ['d₃₃ of PZT','~220 pC/N (up to 600). Quartz 2–3, ZnO 12, AlN 5.'],
+    ['PMUT','Piezoelectric Micromachined Ultrasound Transducer — crystal vibration generates ultrasound.'],
+    ['Lorentz force','F = I·ℓ·sinϑ·B ; B = μ₀μᵣNᵢI/ℓ.'],
+    ['DEA principle','Elastomer between compliant electrodes; E-field → electrostatic pressure; polymer squeezes and expands in-plane.'],
+    ['IPMC principle','Ion-polymer film between two metal electrodes in electrolyte; cations drag solvent → biomorph bending.'],
+    ['SMP trigger','Temperature (conventional), light, electrical, or environmental.'],
+    ['NdFeB microrobot','Ecoflex + 5 µm hard magnetic particles; controlled by a time-varying B-field.'],
+    ['Energy density ranking','Electrostatic 10³ < magnetic 10⁴ < bimetallic 10⁵ < thermopneumatic 10⁶ < piezo/SMA 10⁷ J/m³.'],
+    ['Electrolytic drug pump','RF-controlled electrolysis → bubbles expand chamber → push drug through cannula.'],
+    ['Passive ocular device volume','22.5 µL; 2 PDMS layers; check valve; P_reservoir > P_cannula.'],
+    ['Microneedle types','Hollow, coated, biodegradable (Si, glass, polymer, PDMS molding).'],
+  ],
+  biosensors:[
+    ['3 parts of a biosensor','Recognition element + transducer + amplifier.'],
+    ['Catalytic vs affinity','Catalytic = chemical reaction (enzymes / cells). Affinity = binding (Ab, Ag, nucleic acids).'],
+    ['Mediator example','Ferrocene — accelerates the reaction and regenerates the enzyme.'],
+    ['SELEX','Aptamer production: pool → incubate → select → elute → amplify → next cycle.'],
+    ['Aptamer vs Ab (stability)','Aptamers stable at high T but degraded by nucleases in serum; antibodies denature at high T but stable in serum.'],
+    ['ELISA types','Direct, Indirect, Sandwich, Competitive.'],
+    ['Sandwich ELISA advantage','High specificity — two antibodies bind different epitopes of the same antigen.'],
+    ['Competitive ELISA best for','Small antigens at low concentrations.'],
+    ['Physical immobilization','Adsorption, entrapment, encapsulation.'],
+    ['Chemical immobilization','Covalent bonding, cross-linking.'],
+    ['ISFET principle','Ion-sensitive membrane/gate; enzymatic reaction modulates source-drain current.'],
+    ['Chemiluminescence','Light from a chemical reaction — no excitation source.'],
+    ['Colorimetry','Substrate + enzyme → color change via absorbance.'],
+    ['SAW','Acoustic wave on piezo substrate; velocity depends on mass loading.'],
+    ['SPR','Incident light → plasmons at a metal/dielectric interface; intensity tracks surface binding.'],
+    ['PCR inventor / year','Kary Mullis, 1983.'],
+    ['3 PCR steps','Denaturation → Annealing → Extension.'],
+    ['Continuous-flow vs static-chamber PCR','Continuous: fixed zones, faster, chip tied to one primer. Static: programmable, slower.'],
+    ['Lateral-flow pads','Sample pad → probe pad → detection membrane (test + control line) → absorbent pad.'],
+    ['Lab-on-a-disc','Centrifugal forces; programmable spin profile pumps fluid through sequential chambers.'],
+  ],
+  sensors:[
+    ['Sensor definition','Transducer that converts a measurand into a signal.'],
+    ['Transfer characteristic','S = a + bX (ideal linear).'],
+    ['Sensitivity','dS/dX — slope of the transfer curve.'],
+    ['Resolution','Smallest input change that produces a detectable output change.'],
+    ['Time constant τ','Output reaches 63.2% of a step input.'],
+    ['Settling time','Time to reach ~90% of the final value (≈3τ for first-order).'],
+    ['Seebeck effect','ΔT across a junction of two dissimilar conductors → voltage. V = (αA − αB)·ΔT.'],
+    ['Type K thermocouple','Chromel/alumel, 39.48 µV/°C, −270 to 1372 °C.'],
+    ['Thermodiode voltage','V_out = (k_B·T/q)·ln(I/I_S + 1) — proportional to absolute T at constant I₀.'],
+    ['Potentiometric measurement','Voltage between WE and RE at zero current (ISE; Nernst).'],
+    ['Amperometric 3-electrode','WE, RE, CE. V_WE-RE fixed; ox/redox current between WE and CE → concentration.'],
+    ['Cottrell equation','i = nFAC₀·√D / √(πt).'],
+    ['Randles model','R_s, C_DL, R_CT, Z_W (Warburg).'],
+    ['Impedance flow cytometry (low f)','ΔZ/Z reflects cell VOLUME — separate by size.'],
+    ['Impedance flow cytometry (high f)','ΔZ/Z reflects volume + cytoplasm conductivity — separate by cell type.'],
+    ['Beer–Lambert','A = εC₀ℓ = −ln(I/I₀).'],
+    ['Pulse oximetry','O₂Hb absorbs more IR, HHb more red → Red/IR modulation ratio → SpO₂.'],
+    ['Fluorescence shift','Stokes shift — emission at a longer wavelength than excitation.'],
+    ['Lumee O₂ sensor','Phosphorescence lifetime decay correlates with surrounding O₂.'],
+    ['Gauge factor','G_F = (ΔR/R) / (ΔL/L).'],
+    ['Wheatstone bridge','Strain → ΔR_G → ΔV; balanced bridge is insensitive to temperature.'],
+    ['Cantilever dynamic mode','Mass on the surface shifts resonant f = (1/2π)·√(k/m).'],
+    ['Cantilever static (Stoney)','Δz = 3(1 − ν)·L² / (E·t²) · Δσ.'],
+  ],
+  system:[
+    ['Fusion / direct bonding T','> 1000 °C (plasma-activated: 25–400 °C).'],
+    ['Anodic bonding','Electrochemical; Na⁺ drift in glass; Si–O–Si forms; 180–500 °C, 200–1500 V.'],
+    ['Eutectic Au/Si T','363 °C (81.4% Au / 18.6% Si).'],
+    ['Permeability ranking','Metals < Glasses < Fluoro-carbons < Epoxies < Silicones.'],
+    ['vdW wafer force','F_v = A / (6π·d³), Hamaker constant A.'],
+    ['Wire-bond styles','Ball-to-wedge and wedge-to-wedge (Au wire).'],
+    ['Flip-chip sequence','Fluxing → die placement → reflow → flux cleaning → underfill → cure.'],
+    ['3D stacking','Through-substrate vias (TSVs) link chips; reduces footprint and interconnect length.'],
+    ['Photovoltaic wavelength','NIR — maximum tissue transmittance.'],
+    ['TEG principle','Seebeck: ΔT across a p/n semiconductor pair → voltage → current.'],
+    ['PZT hazard','Contains lead — BioMEMS alternatives AlN, ZnO, BaTiO₃.'],
+    ['Biofuel cell anode','Glucose → gluconolactone + 2H⁺ + 2e⁻.'],
+    ['Biofuel cell cathode','O₂ + 4H⁺ + 4e⁻ → 2H₂O.'],
+    ['Inductive vs capacitive coupling','Both near-field, Hz–MHz, short range, strong penetration, high efficiency (B vs E field).'],
+    ['Ultrasound WPT','PZT (PMUTs / CMUTs); kHz; medium directivity, long range, medium penetration, low efficiency.'],
+    ['SAR formula','SAR = σE² / ρ (W/kg). Tissue T rise < 1–2 °C.'],
+    ['IEEE standard','C95.1-2019 — human RF exposure safety.'],
+    ['Biostability vs biocompatibility','Stability = the material stays intact. Compatibility = no harmful biological reaction.'],
+    ['Bioresorbable materials','Mg, Zn, silk fibroin.'],
+    ['Fibrotic encapsulation','✓ Fixes the implant. ✗ Insulation alters electrical properties.'],
+  ]
+};
+document.querySelectorAll('.cards[data-deck]').forEach(c=>{
+  const items=decks[c.dataset.deck]||[];
+  c.innerHTML=items.map(([q,a])=>`<div class="fc"><div class="q">${q}</div><div class="a">${a}</div><div class="hint">click to reveal</div></div>`).join('');
+  c.querySelectorAll('.fc').forEach(f=>f.addEventListener('click',()=>f.classList.toggle('open')));
+});
+
+/* ========== quiz ========== */
+const Q=[
+  {q:"Electrostatic force between parallel plates scales as:",o:["V, A, 1/x","V², A, 1/x²","V², A², 1/x","V, A², 1/x³"],a:1,e:"F = ½·ε₀εᵣA·V²/x² — V squared, area, and the inverse square of plate distance."},
+  {q:"'Pull-in voltage' means:",o:["The plates start oscillating","The dielectric fails","The movable plate snaps onto and sticks to the fixed plate","Maximum safe operating voltage"],a:2,e:"Above the pull-in voltage the movable and fixed parts stick together."},
+  {q:"Comb-drive actuators produce motion that is:",o:["Out-of-plane","In-plane","Rotational only","Thermal"],a:1,e:"Interdigitated fingers slide past each other in-plane."},
+  {q:"The direct piezoelectric effect converts:",o:["Voltage into strain","Stress into charge/voltage","Temperature into voltage","Magnetic field into force"],a:1,e:"Direct = sensing (stress → charge). Converse = actuating (voltage → strain)."},
+  {q:"Which material has the highest d₃₃?",o:["Quartz","ZnO","PZT ceramic","AlN"],a:2,e:"PZT ≈ 220 pC/N (up to 600) — far above quartz 2–3, ZnO 12, AlN 5."},
+  {q:"Soft Ecoflex microrobots are magnetized with:",o:["Iron oxide","NdFeB hard magnetic microparticles","Permalloy","Ferrofluid"],a:1,e:"~5 µm NdFeB particles; controlled by a time-varying magnetic field."},
+  {q:"IPMCs bend because:",o:["Thermal expansion of water","Cations migrate and drag solvent, swelling one side","Piezoelectric strain","Electromagnetic Lorentz force"],a:1,e:"E-field moves cations toward one plate; cations drag solvent → biomorph bending."},
+  {q:"A biosensor consists of:",o:["Transducer only","Recognition element + transducer + amplifier","Microfluidic channel only","Electrode + battery"],a:1,e:"Recognition (enzyme / Ab / NA / aptamer) + transducer + amplifier → output."},
+  {q:"Aptamers are:",o:["Proteins like antibodies","Short single-stranded DNA/RNA","Enzymes","Metal catalysts"],a:1,e:"Synthetic nucleic acids, produced via SELEX."},
+  {q:"Which ELISA is best for small antigens at low concentrations?",o:["Direct","Indirect","Sandwich","Competitive"],a:3,e:"Competitive ELISA excels at small antigens at low concentrations."},
+  {q:"Adsorption, entrapment and encapsulation are examples of:",o:["Chemical immobilization","Physical immobilization","Covalent bonding","Amperometry"],a:1,e:"Physical (reversible) techniques. Covalent and cross-linking are chemical."},
+  {q:"PCR was invented in:",o:["1953 by Watson","1983 by Mullis","1972 by Berg","2003 by Venter"],a:1,e:"Kary Mullis, 1983."},
+  {q:"The 3 PCR steps, in order, are:",o:["Annealing → Extension → Denaturation","Extension → Denaturation → Annealing","Denaturation → Annealing → Extension","Hybridization → Ligation → Elongation"],a:2,e:"Denaturation → Annealing → Extension."},
+  {q:"In a lateral-flow strip, capillary forces draw the sample from:",o:["Absorbent pad toward the sample pad","Sample pad toward the absorbent pad","Detection membrane to the probe pad","Control line to the test line"],a:1,e:"Sample → probe pad → detection membrane → absorbent pad."},
+  {q:"Sensitivity of a sensor is:",o:["The offset","dS/dX — slope of the transfer curve","1/noise","Settling time"],a:1,e:"Sensitivity is the slope of the output–input transfer curve."},
+  {q:"The time constant τ corresponds to an output of:",o:["50%","63.2%","90%","99%"],a:1,e:"For a first-order system, τ is when the output reaches 63.2% of the final value."},
+  {q:"Type K thermocouple is:",o:["Iron/Constantan","Chromel/Alumel","Copper/Constantan","Pt-Rh/Pt"],a:1,e:"Type K = Chromel/Alumel, 39.48 µV/°C, up to 1372 °C."},
+  {q:"Potentiometric sensors measure voltage at:",o:["Maximum current","Zero current","Fixed current","Varying current"],a:1,e:"Potentiometry: ISE vs RE at zero current — Nernst equation."},
+  {q:"The Cottrell equation gives:",o:["V as a function of pH","Current as a function of time in amperometry","SAR in tissue","The Seebeck voltage"],a:1,e:"i = nFAC₀·√D / √(πt)."},
+  {q:"In impedance flow cytometry, low frequencies (<1 MHz) reveal:",o:["Cytoplasm conductivity","Cell volume (size)","Membrane composition","DNA content"],a:1,e:"Low-f ΔZ/Z reflects volume; high-f adds cytoplasm conductivity → cell type."},
+  {q:"Pulse oximetry uses the ratio of:",o:["Blue / green light","Red / IR light absorbance","UV / visible","Phosphorescence lifetimes"],a:1,e:"O₂Hb absorbs more IR, HHb more red → Red/IR modulation ratio."},
+  {q:"Stoney's equation relates:",o:["Resonant frequency to mass","Cantilever deflection to surface stress","Current to concentration","Voltage to strain"],a:1,e:"Δz = 3(1 − ν)·L² / (E·t²) · Δσ — static microcantilever mode."},
+  {q:"Gauge factor G_F =",o:["ρL/A","(ΔR/R)/(ΔL/L)","V/I","ε₀εᵣA/d"],a:1,e:"Relative resistance change per relative length change — piezoresistive sensitivity."},
+  {q:"Au/Si eutectic bonding temperature is approximately:",o:["150 °C","363 °C","660 °C","1000 °C"],a:1,e:"363 °C for Au 81.4% / Si 18.6%."},
+  {q:"Anodic bonding requires:",o:["UV cure","Na⁺ polarization in glass, 180–500 °C, 200–1500 V","Vacuum only","Eutectic alloy"],a:1,e:"Electrochemical process, Na⁺ drifts to the cathode, Si–O–Si forms at the interface."},
+  {q:"Which material allows moisture through FASTEST?",o:["Metals","Glasses","Silicones","Epoxies"],a:2,e:"Silicones > Epoxies > Fluoro-carbons > Glasses > Metals."},
+  {q:"3D chip stacking uses … for chip-to-chip connections:",o:["Wire bonds only","Through-substrate vias (TSVs)","Optical fibers","Capacitive coupling"],a:1,e:"TSVs pass through the substrate to shorten interconnects and reduce footprint."},
+  {q:"Implantable photovoltaics work best in the:",o:["UV","Visible blue","NIR (near-infrared)","Microwave"],a:2,e:"NIR has the maximum transmittance through tissue."},
+  {q:"SAR formula:",o:["σE²/ρ","ρE²/σ","σ/ρE","E/σρ"],a:0,e:"SAR = σE² / ρ. Tissue T rise < 1–2 °C."},
+  {q:"Fibrotic encapsulation around an implant is:",o:["Always harmful","Bioinert — fixes implant but can insulate electrodes","An immune rejection","A sign of infection"],a:1,e:"No immune response — good for fixation, bad for electrical coupling."},
+];
+const box=document.getElementById('quizBox');
+let state=Q.map(()=>null);
+function renderQuiz(){
+  box.innerHTML=Q.map((q,i)=>`<div class="q-item${state[i]!==null?' answered':''}" data-i="${i}">
+    <div class="q-num">Q${i+1} of ${Q.length}</div>
+    <div class="q-text">${q.q}</div>
+    <div class="opts">${q.o.map((op,j)=>{
+      let cls='';
+      if(state[i]!==null){ if(j===q.a)cls='correct'; else if(j===state[i])cls='wrong'; }
+      return `<button data-j="${j}" class="${cls}" ${state[i]!==null?'disabled':''}>${op}</button>`;
+    }).join('')}</div>
+    <div class="exp">${state[i]===q.a?'Correct.':'Answer: <b>'+q.o[q.a]+'</b>.'} ${q.e}</div>
+  </div>`).join('');
+  box.querySelectorAll('.q-item').forEach(card=>{
+    const i=+card.dataset.i;
+    card.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+      if(state[i]!==null)return;
+      state[i]=+b.dataset.j; renderQuiz(); updateScore();
+    }));
+  });
+  updateScore();
+}
+function updateScore(){
+  const ans=state.filter(x=>x!==null).length;
+  const correct=state.filter((x,i)=>x===Q[i].a).length;
+  document.getElementById('scoreNum').textContent=`${correct} correct · ${ans} / ${Q.length}`;
+  document.getElementById('scoreBar').style.width=(ans/Q.length*100)+'%';
+}
+document.getElementById('resetQuiz').onclick=()=>{state=Q.map(()=>null);renderQuiz();};
+renderQuiz();
+
+/* ========== theme ========== */
+const themeBtn=document.getElementById('themeBtn');
+if(localStorage.getItem('bme-theme')==='dark') document.documentElement.classList.add('dark');
+themeBtn.onclick=()=>{document.documentElement.classList.toggle('dark');localStorage.setItem('bme-theme',document.documentElement.classList.contains('dark')?'dark':'light');};
+document.getElementById('quizJump').onclick=()=>location.hash='#quiz';
+
+/* ========== section routing ========== */
+const TOPICS=['act','bio','sen','sys','quiz'];
+function getTopicFor(anchor){
+  if(!anchor) return null;
+  if(TOPICS.includes(anchor)) return anchor;
+  for(const t of TOPICS) if(anchor.startsWith(t+'-')) return t;
+  return null;
+}
+function showTopic(topicId, anchor){
+  if(!TOPICS.includes(topicId)) topicId='act';
+  document.querySelectorAll('main > section[id]').forEach(s=>{
+    s.classList.toggle('topic-hidden', s.id !== topicId);
+  });
+  document.querySelectorAll('.side .grp').forEach(g=>{
+    g.classList.toggle('active', g.dataset.topic === topicId);
+  });
+  // sub-link active state
+  document.querySelectorAll('.side .grp > a').forEach(a=>{
+    a.classList.toggle('active', a.getAttribute('href') === '#'+anchor);
+  });
+  try{localStorage.setItem('bme:topic',JSON.stringify(topicId));}catch(e){}
+  // scroll
+  if(anchor && anchor !== topicId){
+    requestAnimationFrame(()=>{
+      const el=document.getElementById(anchor);
+      if(el) el.scrollIntoView({block:'start'});
+    });
+  } else {
+    window.scrollTo({top:0});
+  }
+}
+function routeFromHash(){
+  let h=location.hash.slice(1);
+  if(!h){try{h=JSON.parse(localStorage.getItem('bme:topic')||'"act"');}catch(e){h='act';}}
+  const topic=getTopicFor(h) || 'act';
+  showTopic(topic, h || topic);
+}
+// Sidebar click routing
+const side=document.getElementById('side');
+side.addEventListener('click',e=>{
+  const a=e.target.closest('a[href^="#"]');
+  if(!a) return;
+  e.preventDefault();
+  const href=a.getAttribute('href').slice(1);
+  const topic=getTopicFor(href);
+  if(!topic) return;
+  if(location.hash !== '#'+href){
+    history.pushState(null,'','#'+href);
+  }
+  showTopic(topic, href);
+  side.classList.remove('open'); // mobile close
+});
+window.addEventListener('hashchange',routeFromHash);
+window.addEventListener('popstate',routeFromHash);
+
+/* Within-section active sub-link highlight on scroll (IntersectionObserver) */
+const subLinks=[...document.querySelectorAll('.side .grp > a')];
+const subMap=new Map(subLinks.map(a=>[a.getAttribute('href').slice(1),a]));
+const headObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    const a=subMap.get(e.target.id);
+    if(!a) return;
+    if(e.isIntersecting){
+      // only highlight within currently active topic
+      const topic=getTopicFor(e.target.id);
+      const active=document.querySelector('.side .grp.active')?.dataset.topic;
+      if(topic!==active) return;
+      subLinks.forEach(l=>{if(getTopicFor(l.getAttribute('href').slice(1))===active) l.classList.remove('active');});
+      a.classList.add('active');
+    }
+  });
+},{rootMargin:'-15% 0px -75% 0px'});
+document.querySelectorAll('h3[id]').forEach(el=>{if(subMap.has(el.id)) headObs.observe(el);});
+
+/* mobile menu */
+document.getElementById('menuBtn').onclick=()=>side.classList.toggle('open');
+
+/* Initial route */
+routeFromHash();
+
+/* ========== ⌘K search ========== */
+const palette=document.getElementById('palette');
+const palInput=document.getElementById('palInput');
+const palResults=document.getElementById('palResults');
+let idx=[];
+function buildIndex(){
+  // headings
+  document.querySelectorAll('main h1, main h2, main h3, main h4').forEach(h=>{
+    const sec=h.closest('section'); const id=h.id||sec?.id||''; if(!id) return;
+    idx.push({type:h.tagName.toLowerCase(),id:h.id||sec.id,title:h.textContent.trim(),body:''});
+  });
+  // list items & paragraphs in blocks
+  document.querySelectorAll('main .block li, main .block p, main .note').forEach(el=>{
+    const sec=el.closest('section'); if(!sec) return;
+    const h3=el.closest('.block')?.previousElementSibling;
+    const anchor=(h3&&h3.id)?h3.id:sec.id;
+    const title=(h3?.textContent||sec.querySelector('h2')?.textContent||'').trim();
+    idx.push({type:'text',id:anchor,title,body:el.textContent.trim().slice(0,200)});
+  });
+  // flashcards
+  Object.entries(decks).forEach(([deck,items])=>{
+    items.forEach(([q,a])=>idx.push({type:'card',id:deck==='actuators'?'act-cards':deck==='biosensors'?'bio-cards':deck==='sensors'?'sen-cards':'sys-cards',title:'Flashcard · '+deck,body:q+' — '+a}));
+  });
+  // quiz
+  Q.forEach((q,i)=>idx.push({type:'quiz',id:'quiz',title:'Q'+(i+1),body:q.q+' '+q.o.join(' · ')}));
+}
+buildIndex();
+function openPalette(){palette.classList.add('open');palInput.value='';palInput.focus();runSearch('');}
+function closePalette(){palette.classList.remove('open');}
+document.getElementById('searchOpen').onclick=openPalette;
+window.addEventListener('keydown',e=>{
+  if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openPalette();}
+  if(e.key==='Escape'&&palette.classList.contains('open')){closePalette();}
+  if(palette.classList.contains('open')&&(e.key==='ArrowDown'||e.key==='ArrowUp'||e.key==='Enter')){
+    const res=[...palResults.querySelectorAll('a')]; if(!res.length) return;
+    let sel=palResults.querySelector('a.sel'); let i=sel?res.indexOf(sel):-1;
+    if(e.key==='ArrowDown'){e.preventDefault();i=Math.min(res.length-1,i+1);}
+    else if(e.key==='ArrowUp'){e.preventDefault();i=Math.max(0,i-1);}
+    else if(e.key==='Enter'&&sel){e.preventDefault();location.hash='#'+sel.dataset.id;closePalette();return;}
+    res.forEach(a=>a.classList.remove('sel')); if(res[i]){res[i].classList.add('sel');res[i].scrollIntoView({block:'nearest'});}
+  }
+});
+palette.addEventListener('click',e=>{if(e.target===palette)closePalette();});
+palInput.addEventListener('input',e=>runSearch(e.target.value));
+function highlight(s,q){ if(!q)return s; const r=new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','ig'); return s.replace(r,'<em>$1</em>'); }
+function runSearch(q){
+  q=q.trim().toLowerCase();
+  let hits=idx;
+  if(q){hits=idx.map(it=>{const hay=(it.title+' '+it.body).toLowerCase();const p=hay.indexOf(q);return p===-1?null:{...it,_p:p};}).filter(Boolean).sort((a,b)=>a._p-b._p);}
+  else {hits=idx.filter(it=>it.type==='h2'||it.type==='h3');}
+  hits=hits.slice(0,50);
+  if(!hits.length){palResults.innerHTML='<div class="empty">No matches</div>';return;}
+  palResults.innerHTML=hits.map((it,i)=>`<a href="#${it.id}" data-id="${it.id}" class="${i===0?'sel':''}"><span class="tag">${it.type.toUpperCase()}</span>${highlight(it.title,q)}${it.body?' — <span style="color:var(--muted)">'+highlight(it.body.slice(0,120),q)+(it.body.length>120?'…':'')+'</span>':''}</a>`).join('');
+  palResults.querySelectorAll('a').forEach(a=>a.onclick=()=>{closePalette();});
+}
+
+/* ============================================================
+   INTERACTIVE WIDGETS
+============================================================ */
+const $=(s,r)=>(r||document).querySelector(s);
+const fmtSci=(x,d=2)=>{if(!isFinite(x))return '—'; if(x===0)return '0'; const a=Math.abs(x); if(a>=0.01&&a<10000)return x.toFixed(d); const e=Math.floor(Math.log10(a)); const m=x/Math.pow(10,e); return m.toFixed(d)+'·10'+sup(e);};
+const sup=n=>String(n).replace(/-/g,'−').replace(/[0-9−]/g,c=>({'0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹','−':'⁻'}[c]));
+
+/* ---------- ENERGY DENSITY SCALE ---------- */
+(()=>{const svg=$('#energySvg'),out=$('#energyOut'); if(!svg) return;
+  const data=[
+    {name:'Electrostatic',e:3,why:'Small V² / 1/x² force per volume. Easy to fabricate (plates) but weak — good for small, fast MEMS switches and combs.'},
+    {name:'Magnetic',e:4,why:'Solenoid-based actuation. Requires coils and flux paths — tricky to miniaturize, hence modest density.'},
+    {name:'Bimetallic',e:5,why:'Two metals with different CTEs bend when heated. Cheap but slow — thermal time constants.'},
+    {name:'Thermopneumatic',e:6,why:'Trapped gas/liquid expands when heated. High force, slow response. Used in some pumps.'},
+    {name:'Piezoelectric',e:7,why:'Tiny strain × high force = high energy density. Fast and precise. Dominant in precise actuation &amp; harvesting.'},
+    {name:'SMA',e:7,why:'Shape-memory alloy phase transition gives huge stress. Slow heating/cooling, but excellent force per volume.'},
+  ];
+  const W=640,H=110,padL=30,padR=30;
+  const xOf=e=>padL+(e-2)*(W-padL-padR)/6;
+  let html='<line x1="'+padL+'" y1="70" x2="'+(W-padR)+'" y2="70" stroke="var(--rule)" stroke-width="1"/>';
+  for(let e=2;e<=8;e++){const x=xOf(e); html+=`<line x1="${x}" y1="66" x2="${x}" y2="74" stroke="var(--rule)"/><text x="${x}" y="92" text-anchor="middle" font-size="10" fill="var(--muted)" font-family="var(--sans)">10${sup(e)}</text>`;}
+  html+=`<text x="${W/2}" y="106" text-anchor="middle" font-size="10" fill="var(--muted)" font-family="var(--sans)">Energy density (J/m³)</text>`;
+  data.forEach((d,i)=>{const x=xOf(d.e); const y=26+((i%3)*14); html+=`<g class="eng" style="cursor:pointer" data-i="${i}"><circle cx="${x}" cy="70" r="6" fill="var(--accent)"/><line x1="${x}" y1="70" x2="${x}" y2="${y+5}" stroke="var(--accent)" stroke-width="1"/><text x="${x}" y="${y}" text-anchor="middle" font-size="11" font-family="var(--sans)" fill="var(--ink)">${d.name}</text></g>`;});
+  svg.innerHTML=html;
+  const show=i=>{const d=data[i]; out.innerHTML=`<b>${d.name}</b> — ~10${sup(d.e)} J/m³. <small>${d.why}</small>`;};
+  svg.querySelectorAll('.eng').forEach(g=>{g.addEventListener('mouseenter',()=>show(+g.dataset.i));g.addEventListener('click',()=>show(+g.dataset.i));});
+})();
+
+/* ---------- ELECTROSTATIC PARALLEL PLATE ---------- */
+(()=>{const V=$('#es-v'),A=$('#es-a'),X=$('#es-x'),K=$('#es-k'); if(!V) return;
+  const svg=$('#es-svg');
+  function draw(){
+    const v=+V.value, a=+A.value*1e-12, x=+X.value*1e-6, k=+K.value;
+    $('#es-vv').textContent=v; $('#es-aa').textContent=+A.value; $('#es-xx').textContent=(+X.value).toFixed(1); $('#es-kk').textContent=k.toFixed(1);
+    const eps0=8.854e-12;
+    // pull-in voltage for parallel plate with spring
+    const Vpi=Math.sqrt(8*k*Math.pow(x,3)/(27*eps0*a));
+    // deflection: iterative — use closed-form only valid for stable region
+    // For undeflected approximation: F = 0.5*eps0*a*V^2/x^2 (no deflection). Deflected: iterate.
+    let defl=0, Fnow=0;
+    if(v<Vpi){
+      // iterate
+      for(let i=0;i<30;i++){
+        Fnow=0.5*eps0*a*v*v/Math.pow(x-defl,2);
+        defl=Math.min(x*0.34,Fnow/k);
+      }
+    } else {
+      defl=x; Fnow=0.5*eps0*a*v*v/Math.pow(Math.max(x*0.1,x-defl+1e-9),2);
+    }
+    $('#es-f').textContent = Fnow<1e-9?fmtSci(Fnow*1e12,2)+' pN':Fnow<1e-6?fmtSci(Fnow*1e9,2)+' nN':fmtSci(Fnow*1e6,2)+' µN';
+    $('#es-def').textContent=(defl*1e6).toFixed(2)+' µm';
+    $('#es-vpi').textContent=fmtSci(Vpi,1)+' V';
+    // viz
+    const gapPx=70, topY=40, platW=200, platX=60, platH=14;
+    const deflPx = Math.min(gapPx-6, (defl/x)*gapPx);
+    const collapsed=v>=Vpi;
+    const botY=topY+platH+gapPx-deflPx;
+    const fieldLines=collapsed?'':Array.from({length:7}).map((_,i)=>`<line x1="${platX+20+i*26}" y1="${topY+platH}" x2="${platX+20+i*26}" y2="${botY}" stroke="var(--accent)" stroke-width="1" opacity=".35" stroke-dasharray="3 3"/>`).join('');
+    svg.innerHTML=`
+      <rect x="${platX}" y="${topY}" width="${platW}" height="${platH}" fill="var(--accent)" rx="2"/>
+      ${fieldLines}
+      <rect x="${platX}" y="${botY}" width="${platW}" height="${platH}" fill="${collapsed?'#c0392b':'var(--ink)'}" opacity=".85" rx="2"/>
+      <text x="${platX-6}" y="${topY+10}" text-anchor="end" font-size="11" fill="var(--muted)" font-family="var(--sans)">+V</text>
+      <text x="${platX-6}" y="${botY+12}" text-anchor="end" font-size="11" fill="var(--muted)" font-family="var(--sans)">GND</text>
+      ${collapsed?'<text x="160" y="135" text-anchor="middle" font-size="12" fill="#c0392b" font-family="var(--sans)" font-weight="600">⚠ pull-in — plates stuck</text>':''}`;
+    $('#es-msg').innerHTML = collapsed
+      ? '<span class="warn">⚠ Beyond pull-in voltage</span> — deflection exceeds <code>x/3</code> and the system snaps closed.'
+      : `Stable region. <code>V<sub>pi</sub> = √(8·k·x³ / 27·ε₀·A) = ${fmtSci(Vpi,1)} V</code>. Past this the plates always snap together.`;
+  }
+  [V,A,X,K].forEach(e=>e.addEventListener('input',draw)); draw();
+})();
+
+/* ---------- PIEZO STRAIN ---------- */
+(()=>{const M=$('#pz-mat'),V=$('#pz-v'),L=$('#pz-l'); if(!M) return;
+  const svg=$('#pz-svg');
+  function draw(){
+    const d=+M.value, v=+V.value, L_mm=+L.value;
+    $('#pz-d').textContent=d; $('#pz-vv').textContent=v; $('#pz-ll').textContent=L_mm.toFixed(2);
+    // dX = d33 * V (in meters if d33 in C/N or m/V — same). d in pC/N = pm/V. so dX in pm = d33 * V.
+    const dx_pm=d*v; // picometers
+    let readout;
+    if(Math.abs(dx_pm)<1000) readout=dx_pm.toFixed(1)+' pm';
+    else if(Math.abs(dx_pm)<1e6) readout=(dx_pm/1000).toFixed(2)+' nm';
+    else readout=(dx_pm/1e6).toFixed(2)+' µm';
+    $('#pz-dx').textContent=readout+' '+(d<0?'(contracts on +V)':'');
+    // viz
+    const base=220, h=30, y=30;
+    const scale=Math.max(0,Math.min(40, Math.abs(dx_pm)/50));
+    svg.innerHTML=`
+      <rect x="50" y="${y}" width="${base}" height="${h}" fill="var(--rule)" stroke="var(--muted)" opacity=".6" stroke-dasharray="3 3"/>
+      <rect x="50" y="${y}" width="${base+(d>0?scale:-scale)}" height="${h}" fill="var(--accent)" opacity=".85"/>
+      <text x="${50+base/2}" y="${y+h+18}" text-anchor="middle" font-size="11" fill="var(--muted)" font-family="var(--sans)">neutral length (dashed) → deformed (solid)</text>
+      <text x="${50+base/2}" y="20" text-anchor="middle" font-size="11" fill="var(--ink)" font-family="var(--sans)">ΔX = ${readout}</text>`;
+  }
+  [M,V,L].forEach(e=>e.addEventListener('input',draw)); draw();
+})();
+
+/* ---------- LORENTZ ---------- */
+(()=>{const I=$('#lz-i'),N=$('#lz-n'),L=$('#lz-l'),M=$('#lz-mu'); if(!I) return;
+  function draw(){
+    const i=+I.value,n=+N.value,l=+L.value*1e-3,mu=+M.value;
+    $('#lz-ii').textContent=i.toFixed(2); $('#lz-nn').textContent=n; $('#lz-ll').textContent=+L.value; $('#lz-mm').textContent=mu;
+    const mu0=4*Math.PI*1e-7;
+    const B=mu0*mu*n*i/l;
+    const F=i*l*B;
+    $('#lz-b').textContent=B<1e-3?(B*1e6).toFixed(2)+' µT':B<1?(B*1e3).toFixed(2)+' mT':B.toFixed(3)+' T';
+    $('#lz-f').textContent=F<1e-6?(F*1e9).toFixed(2)+' nN':F<1e-3?(F*1e6).toFixed(2)+' µN':F<1?(F*1e3).toFixed(2)+' mN':F.toFixed(3)+' N';
+  }
+  [I,N,L,M].forEach(e=>e.addEventListener('input',draw)); draw();
+})();
+
+/* ---------- ELISA ---------- */
+(()=>{const tabs=$('#elisa-tabs'); if(!tabs) return;
+  const svg=$('#elisa-svg'),out=$('#elisa-out'),step=$('#elisa-step');
+  const types={
+    direct:{label:'Direct',steps:[
+      ['Plate coated with antigen','Antigens immobilized on well surface (the sample).'],
+      ['Labeled primary Ab added','Primary antibody carries the enzyme label (HRP) directly.'],
+      ['Wash unbound','Only Ab bound to antigen remains.'],
+      ['Substrate → color','Enzyme converts chromogenic substrate into visible product — intensity ∝ antigen amount.'],
+    ]},
+    indirect:{label:'Indirect',steps:[
+      ['Plate coated with antigen','Antigens immobilized on well surface.'],
+      ['Unlabeled primary Ab','First antibody binds antigen.'],
+      ['Labeled secondary Ab','Several 2° Ab bind one 1° Ab → signal amplification.'],
+      ['Wash + substrate','Enzymes produce amplified color signal.'],
+    ]},
+    sandwich:{label:'Sandwich',steps:[
+      ['Plate coated with capture Ab','Capture antibody (1°) immobilized on well surface.'],
+      ['Sample with antigen','Antigen of interest binds the capture Ab.'],
+      ['Labeled detection Ab','Second Ab binds a different epitope on the same antigen.'],
+      ['Wash + substrate','Two-Ab specificity + enzyme amplification. The gold standard for proteins.'],
+    ]},
+    competitive:{label:'Competitive',steps:[
+      ['Plate coated with antigen','A known antigen is attached to the well.'],
+      ['Mix: sample + labeled Ab','Free antigen in the sample competes with plate-bound antigen for the Ab.'],
+      ['Wash unbound','Less signal = more antigen in the sample (inverse relationship).'],
+      ['Substrate → color','Good for small antigens at low concentrations.'],
+    ]},
+  };
+  let cur='direct',i=0;
+  function well(contents){
+    // draw a well with wall outline
+    return `<rect x="120" y="40" width="240" height="100" fill="none" stroke="var(--ink)" stroke-width="2" rx="4"/>${contents}<line x1="120" y1="140" x2="360" y2="140" stroke="var(--ink)" stroke-width="3"/>`;
+  }
+  function ag(x,y){return `<polygon points="${x},${y} ${x-7},${y+10} ${x+7},${y+10}" fill="#6a8fb8"/>`;}
+  function capAb(x,y){return `<path d="M${x-9} ${y-10} L${x} ${y} L${x+9} ${y-10}" stroke="#c0392b" stroke-width="2.5" fill="none"/><line x1="${x}" y1="${y}" x2="${x}" y2="${y+10}" stroke="#c0392b" stroke-width="2.5"/>`;}
+  function abEnz(x,y,color='#229954',enz=true){return `<path d="M${x-9} ${y+10} L${x} ${y} L${x+9} ${y+10}" stroke="${color}" stroke-width="2.5" fill="none"/><line x1="${x}" y1="${y}" x2="${x}" y2="${y-10}" stroke="${color}" stroke-width="2.5"/>${enz?`<circle cx="${x}" cy="${y-14}" r="5" fill="${color}"/>`:''}`;}
+  function star(x,y){return `<text x="${x}" y="${y}" font-size="18" text-anchor="middle" fill="#d68910">✦</text>`;}
+  function draw(){
+    const t=types[cur];
+    step.textContent=`Step ${i+1} / ${t.steps.length} — ${t.label}`;
+    out.innerHTML=`<b>${t.steps[i][0]}.</b> ${t.steps[i][1]}`;
+    // content
+    let content='';
+    const xs=[150,200,250,300,350-20];
+    if(cur==='direct'){
+      if(i>=0) xs.forEach(x=>content+=ag(x,120));
+      if(i>=1) xs.forEach(x=>content+=abEnz(x,100,'#229954',true));
+      if(i>=3) content+=xs.map(x=>star(x,82)).join('');
+    } else if(cur==='indirect'){
+      if(i>=0) xs.forEach(x=>content+=ag(x,120));
+      if(i>=1) xs.forEach(x=>content+=abEnz(x,100,'#6a3aa0',false));
+      if(i>=2) xs.forEach(x=>content+=abEnz(x-10,85,'#229954',true))+xs.forEach(x=>content+=abEnz(x+10,85,'#229954',true));
+      if(i>=3) content+=xs.map(x=>star(x,68)).join('');
+    } else if(cur==='sandwich'){
+      if(i>=0) xs.forEach(x=>content+=capAb(x,135));
+      if(i>=1) xs.forEach(x=>content+=`<circle cx="${x}" cy="113" r="7" fill="#6a8fb8"/>`);
+      if(i>=2) xs.forEach(x=>content+=abEnz(x,100,'#229954',true));
+      if(i>=3) content+=xs.map(x=>star(x,82)).join('');
+    } else if(cur==='competitive'){
+      if(i>=0) xs.forEach(x=>content+=ag(x,120));
+      if(i>=1){
+        // some bound, some free-in-solution
+        xs.forEach((x,k)=>{ if(k%2===0) content+=abEnz(x,100,'#229954',true); });
+        // free antigens with bound Ab floating
+        content+=`<g opacity=".7"><circle cx="160" cy="60" r="5" fill="#6a8fb8"/>${abEnz(160,50,'#229954',true)}<circle cx="260" cy="65" r="5" fill="#6a8fb8"/>${abEnz(260,55,'#229954',true)}</g>`;
+      }
+      if(i>=3) xs.filter((_,k)=>k%2===0).forEach(x=>content+=star(x,82));
+    }
+    svg.innerHTML=well(content);
+  }
+  tabs.addEventListener('click',e=>{if(e.target.dataset.t){tabs.querySelectorAll('button').forEach(b=>b.classList.remove('on'));e.target.classList.add('on');cur=e.target.dataset.t;i=0;draw();}});
+  $('#elisa-next').onclick=()=>{i=(i+1)%types[cur].steps.length;draw();};
+  $('#elisa-prev').onclick=()=>{i=(i-1+types[cur].steps.length)%types[cur].steps.length;draw();};
+  draw();
+})();
+
+/* ---------- PCR CYCLE ---------- */
+(()=>{const canvas=$('#pcr-canvas'); if(!canvas) return;
+  const ctx=canvas.getContext('2d');
+  const w=canvas.width,h=canvas.height;
+  let cycle=0, running=false, t=0, phase='idle', copies=1;
+  function draw(){
+    ctx.clearRect(0,0,w,h);
+    // axes
+    ctx.strokeStyle=getVar('--rule'); ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(40,20); ctx.lineTo(40,h-24); ctx.lineTo(w-10,h-24); ctx.stroke();
+    ctx.fillStyle=getVar('--muted'); ctx.font='11px ui-sans-serif';
+    ['95°C','72°C','55°C','25°C'].forEach((lbl,i)=>{const y=20+i*((h-44)/3); ctx.fillText(lbl,6,y+4);});
+    ctx.fillText('time →',w-50,h-8);
+    // shade phase bands
+    const T=(temp)=>h-24 - (temp-25)/(95-25)*(h-44);
+    const drawPhase=(x1,x2,col)=>{ctx.fillStyle=col; ctx.globalAlpha=.12; ctx.fillRect(x1,20,x2-x1,h-44); ctx.globalAlpha=1;};
+    // previous cycles small
+    const cwidth=(w-50)/Math.max(6,cycle+1);
+    for(let c=0;c<cycle;c++){
+      const x0=40+c*cwidth;
+      drawPhase(x0,x0+cwidth*.33,'#c0392b');
+      drawPhase(x0+cwidth*.33,x0+cwidth*.66,'#d68910');
+      drawPhase(x0+cwidth*.66,x0+cwidth,'#229954');
+      ctx.strokeStyle='var(--accent)';ctx.lineWidth=2;
+      ctx.beginPath();
+      ctx.moveTo(x0,T(95));ctx.lineTo(x0+cwidth*.33,T(95));
+      ctx.lineTo(x0+cwidth*.36,T(55));ctx.lineTo(x0+cwidth*.66,T(55));
+      ctx.lineTo(x0+cwidth*.69,T(72));ctx.lineTo(x0+cwidth,T(72));
+      ctx.stroke();
+    }
+    // current cycle
+    if(running){
+      const x0=40+cycle*cwidth;
+      let temp=95, px=x0;
+      if(t<1){px=x0+cwidth*.33*t; temp=95; drawPhase(x0,px,'#c0392b');}
+      else if(t<2){px=x0+cwidth*.33+cwidth*.33*(t-1); temp=55; drawPhase(x0+cwidth*.33,px,'#d68910');}
+      else {px=x0+cwidth*.66+cwidth*.34*(t-2); temp=72; drawPhase(x0+cwidth*.66,px,'#229954');}
+      ctx.fillStyle=getVar('--accent'); ctx.beginPath(); ctx.arc(px,T(temp),5,0,Math.PI*2); ctx.fill();
+    }
+  }
+  function getVar(n){return getComputedStyle(document.documentElement).getPropertyValue(n)||'#000';}
+  const speed=$('#pcr-speed');
+  let last=0;
+  function tick(ts){
+    if(!running){last=ts; draw(); requestAnimationFrame(tick); return;}
+    const dt=Math.min(0.1,(ts-last)/1000)*(+speed.value); last=ts;
+    t+=dt;
+    const phases=['Denaturation','Annealing','Extension'];
+    phase = phases[Math.min(2,Math.floor(t))];
+    $('#pcr-phase').textContent=phase;
+    if(t>=3){cycle++; copies*=2; $('#pcr-cycle').textContent=cycle; $('#pcr-copies').textContent=copies>=1e6?copies.toExponential(1):copies.toLocaleString(); t=0; if(cycle>=30){running=false; phase='Done';}}
+    draw(); requestAnimationFrame(tick);
+  }
+  $('#pcr-start').onclick=()=>{running=!running; $('#pcr-start').textContent=running?'⏸ Pause':'▶ Resume';};
+  $('#pcr-reset').onclick=()=>{running=false;cycle=0;copies=1;t=0;phase='idle';$('#pcr-start').textContent='▶ Run cycle';$('#pcr-cycle').textContent='0';$('#pcr-copies').textContent='1';$('#pcr-phase').textContent='Ready';draw();};
+  requestAnimationFrame(tick);
+})();
+
+/* ---------- LATERAL-FLOW ---------- */
+(()=>{const canvas=$('#lf-canvas'); if(!canvas) return;
+  const ctx=canvas.getContext('2d'); const W=canvas.width,H=canvas.height;
+  let particles=[], pos=0, started=false, pos_=0;
+  const getV=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim()||'#000';
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    // pads: sample (0-120) probe (120-220) detection (220-440) absorbent (440-600)
+    const y0=40,hh=60;
+    const pads=[['Sample',0,120,'#e8dfd0'],['Probe',120,220,'#e0c8a8'],['Detection',220,440,'#cfd8dc'],['Absorbent',440,600,'#d7e2d0']];
+    pads.forEach(([n,a,b,c])=>{ctx.fillStyle=c; ctx.fillRect(10+a,y0,(b-a),hh); ctx.strokeStyle=getV('--rule'); ctx.strokeRect(10+a,y0,(b-a),hh); ctx.fillStyle=getV('--muted'); ctx.font='10px ui-sans-serif'; ctx.fillText(n,15+a,y0+hh+14);});
+    // test + control lines
+    ctx.fillStyle='#ccc'; ctx.fillRect(10+280,y0+5,3,hh-10); ctx.fillRect(10+380,y0+5,3,hh-10);
+    ctx.fillStyle=getV('--muted'); ctx.fillText('T',10+283,y0-4); ctx.fillText('C',10+383,y0-4);
+    // lines visible
+    const pos_ex = Math.min(1,pos/600);
+    if(pos_ex*600 > 380){ctx.fillStyle='#c0392b'; ctx.fillRect(10+380,y0+5,3,hh-10);} // control always when sample reaches
+    if(pos_ex*600 > 280 && isPos){ctx.fillStyle='#c0392b'; ctx.fillRect(10+280,y0+5,3,hh-10);} // test only if positive
+    // particles
+    particles.forEach(p=>{
+      p.x += p.vx;
+      ctx.fillStyle=p.c; ctx.globalAlpha=.8;
+      ctx.beginPath(); ctx.arc(10+p.x,y0+hh/2+p.yo,3,0,Math.PI*2); ctx.fill();
+      ctx.globalAlpha=1;
+    });
+    particles = particles.filter(p=>p.x<600);
+    pos = Math.max(pos, particles.length?Math.max(...particles.map(p=>p.x)):0);
+    if(started && pos<600){requestAnimationFrame(draw);}
+  }
+  let isPos=true;
+  function start(){
+    particles=[];
+    const n=24;
+    for(let i=0;i<n;i++) particles.push({x:0+Math.random()*20,vx:1.2+Math.random()*.6,yo:(Math.random()-.5)*30,c:i<12?'#6a8fb8':(isPos?'#c0392b':'#888')});
+    pos=0; started=true;
+    $('#lf-out').innerHTML='<b>Capillary flow engaged.</b> Analyte (if present) binds the colored probes on the probe pad, then gets caught at the test line. The control line confirms flow regardless of analyte presence.';
+    requestAnimationFrame(draw);
+  }
+  $('#lf-drop').onclick=()=>{isPos=$('#lf-pos').checked; start();};
+  $('#lf-reset').onclick=()=>{started=false; particles=[]; pos=0; draw(); $('#lf-out').textContent='Drop a sample and watch capillary forces pull it across.';};
+  draw();
+})();
+
+/* ---------- THERMOCOUPLE ---------- */
+(()=>{const T=$('#tc-type'),Ts=$('#tc-ts'),Tr=$('#tc-tr'); if(!T) return;
+  function draw(){
+    const a=+T.value, ts=+Ts.value, tr=+Tr.value;
+    $('#tc-a').textContent=a.toFixed(2); $('#tc-tsv').textContent=ts; $('#tc-trv').textContent=tr;
+    const dT=ts-tr;
+    $('#tc-dt').textContent=dT.toFixed(0);
+    const V=a*1e-6*dT; // volts
+    $('#tc-v').textContent = Math.abs(V)<1e-3?(V*1e6).toFixed(1)+' µV':(V*1e3).toFixed(3)+' mV';
+  }
+  [T,Ts,Tr].forEach(e=>e.addEventListener('input',draw)); draw();
+})();
+
+/* ---------- NERNST ---------- */
+(()=>{const O=$('#n-ox'),R=$('#n-red'),Tt=$('#n-t'),N=$('#n-n'); if(!O) return;
+  function draw(){
+    const ox=+O.value,red=+R.value,T=+Tt.value,n=+N.value;
+    $('#n-oxv').textContent=(ox<0?'−'+Math.abs(ox).toFixed(2):ox.toFixed(2));
+    $('#n-redv').textContent=(red<0?'−'+Math.abs(red).toFixed(2):red.toFixed(2));
+    $('#n-tv').textContent=T; $('#n-nv').textContent=n;
+    const R_=8.314, F=96485;
+    const VT=R_*T/F;
+    $('#n-vt').textContent=(VT*1000).toFixed(2)+' mV';
+    const E=(VT/n)*Math.log(Math.pow(10,ox)/Math.pow(10,red));
+    $('#n-e').textContent=(E*1000).toFixed(1)+' mV';
+  }
+  [O,R,Tt,N].forEach(e=>e.addEventListener('input',draw)); draw();
+})();
+
+/* ---------- NYQUIST ---------- */
+(()=>{const canvas=$('#ny-canvas'); if(!canvas) return;
+  const ctx=canvas.getContext('2d'), W=canvas.width,H=canvas.height;
+  const Rs=$('#ny-rs'),Rct=$('#ny-rct'),Cdl=$('#ny-cdl'),Wb=$('#ny-w');
+  function getV(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim()||'#000';}
+  function draw(){
+    const rs=+Rs.value, rct=+Rct.value, cdl=Math.pow(10,+Cdl.value), sigma=+Wb.value;
+    $('#ny-rsv').textContent=rs; $('#ny-rctv').textContent=rct; $('#ny-cdlv').textContent=(+Cdl.value).toFixed(2); $('#ny-wv').textContent=sigma;
+    // compute Z(omega) for many frequencies
+    const pts=[];
+    for(let k=0;k<120;k++){
+      const w=Math.pow(10,-1+k*0.05); // ω 0.1 .. 10^5
+      // Zw (semi-infinite) = sigma/sqrt(w) - j*sigma/sqrt(w)
+      const Zw_re = sigma/Math.sqrt(w), Zw_im = -sigma/Math.sqrt(w);
+      const RctZw_re = rct + Zw_re, RctZw_im = Zw_im;
+      // parallel with Cdl: 1/Zp = 1/(Rct+Zw) + jwC
+      const denom_re = RctZw_re/(RctZw_re*RctZw_re+RctZw_im*RctZw_im);
+      const denom_im = -RctZw_im/(RctZw_re*RctZw_re+RctZw_im*RctZw_im);
+      const y_re = denom_re, y_im = denom_im + w*cdl;
+      const mag = y_re*y_re+y_im*y_im;
+      const Zp_re = y_re/mag, Zp_im = -y_im/mag;
+      const Z_re=rs+Zp_re, Z_im=Zp_im;
+      pts.push([Z_re,-Z_im]);
+    }
+    const maxX=Math.max(...pts.map(p=>p[0]))*1.05;
+    const maxY=Math.max(...pts.map(p=>p[1]))*1.1 || 10;
+    const mx=Math.max(maxX,maxY)*1.05;
+    ctx.clearRect(0,0,W,H);
+    const pad=30;
+    const X=x=>pad+(x/mx)*(W-pad-10);
+    const Y=y=>H-pad-(y/mx)*(H-pad-20);
+    // axes
+    ctx.strokeStyle=getV('--rule'); ctx.beginPath(); ctx.moveTo(pad,H-pad); ctx.lineTo(W-10,H-pad); ctx.moveTo(pad,H-pad); ctx.lineTo(pad,20); ctx.stroke();
+    ctx.fillStyle=getV('--muted'); ctx.font='11px ui-sans-serif';
+    ctx.fillText("Z' (Ω)",W-50,H-10); ctx.save(); ctx.translate(12,H/2); ctx.rotate(-Math.PI/2); ctx.fillText("−Z'' (Ω)",0,0); ctx.restore();
+    // ticks
+    for(let t=0.25;t<1;t+=0.25){const v=mx*t; const xt=X(v); ctx.strokeStyle=getV('--rule'); ctx.beginPath(); ctx.moveTo(xt,H-pad); ctx.lineTo(xt,H-pad+4); ctx.stroke(); ctx.fillText(v.toFixed(0),xt-8,H-pad+15);}
+    // plot
+    ctx.strokeStyle=getV('--accent'); ctx.lineWidth=2; ctx.beginPath();
+    pts.forEach((p,i)=>{const x=X(p[0]),y=Y(p[1]); if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);});
+    ctx.stroke();
+    // markers: Rs, Rs+Rct
+    ctx.fillStyle=getV('--ink'); ctx.beginPath(); ctx.arc(X(rs),Y(0),4,0,Math.PI*2); ctx.fill();
+    ctx.fillText('R_s',X(rs)-8,Y(0)+18);
+    ctx.beginPath(); ctx.arc(X(rs+rct),Y(0),4,0,Math.PI*2); ctx.fill();
+    ctx.fillText('R_s+R_CT',X(rs+rct)-25,Y(0)+18);
+  }
+  [Rs,Rct,Cdl,Wb].forEach(e=>e.addEventListener('input',draw)); draw();
+  // redraw on theme change
+  new MutationObserver(draw).observe(document.documentElement,{attributes:true,attributeFilter:['class']});
+})();
+
+/* ---------- BEER-LAMBERT ---------- */
+(()=>{const canvas=$('#bl-canvas'); if(!canvas) return;
+  const ctx=canvas.getContext('2d'), W=canvas.width,H=canvas.height;
+  const E=$('#bl-e'),C=$('#bl-c'),L=$('#bl-l');
+  function getV(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim()||'#000';}
+  function draw(){
+    const eps=+E.value, c=+C.value, l=+L.value;
+    $('#bl-ev').textContent=eps; $('#bl-cv').textContent=(c*1000).toFixed(2); $('#bl-lv').textContent=l.toFixed(1);
+    const A=eps*c*l, T=Math.pow(10,-A);
+    $('#bl-a').textContent=A.toFixed(2); $('#bl-t').textContent=(T*100).toFixed(2)+' %';
+    ctx.clearRect(0,0,W,H);
+    // draw source, beaker, detector
+    const midY=H/2, beakerX=160, beakerW=Math.max(60, l*32), beakerH=70;
+    // source lamp
+    ctx.fillStyle='#f1c40f'; ctx.beginPath(); ctx.arc(80,midY,18,0,Math.PI*2); ctx.fill();
+    ctx.strokeStyle=getV('--ink'); ctx.beginPath(); ctx.arc(80,midY,18,0,Math.PI*2); ctx.stroke();
+    // incoming beam
+    ctx.strokeStyle='#f1c40f'; ctx.lineWidth=4; ctx.globalAlpha=.9;
+    ctx.beginPath(); ctx.moveTo(98,midY); ctx.lineTo(beakerX,midY); ctx.stroke();
+    // beaker with tinted fill
+    const tintAlpha=Math.min(.9,A*0.25);
+    ctx.globalAlpha=1; ctx.fillStyle=`rgba(40,120,180,${tintAlpha})`; ctx.fillRect(beakerX,midY-beakerH/2,beakerW,beakerH);
+    ctx.strokeStyle=getV('--ink'); ctx.lineWidth=2; ctx.strokeRect(beakerX,midY-beakerH/2,beakerW,beakerH);
+    // outgoing beam (attenuated)
+    const outAlpha=Math.max(.05,T);
+    ctx.globalAlpha=outAlpha; ctx.strokeStyle='#f1c40f'; ctx.lineWidth=4;
+    ctx.beginPath(); ctx.moveTo(beakerX+beakerW,midY); ctx.lineTo(beakerX+beakerW+100,midY); ctx.stroke();
+    ctx.globalAlpha=1;
+    // detector
+    ctx.fillStyle=getV('--ink'); ctx.fillRect(beakerX+beakerW+100,midY-15,18,30);
+    ctx.fillStyle=getV('--muted'); ctx.font='11px ui-sans-serif';
+    ctx.fillText('lamp (I₀)',62,midY+40); ctx.fillText('detector (I)',beakerX+beakerW+80,midY+40);
+    ctx.fillText('ℓ = '+l.toFixed(1)+' cm',beakerX+beakerW/2-22,midY-beakerH/2-6);
+  }
+  [E,C,L].forEach(e=>e.addEventListener('input',draw)); draw();
+  new MutationObserver(draw).observe(document.documentElement,{attributes:true,attributeFilter:['class']});
+})();
+
+/* ---------- PULSE OX ---------- */
+(()=>{const canvas=$('#ox-canvas'); if(!canvas) return;
+  const ctx=canvas.getContext('2d'), W=canvas.width,H=canvas.height;
+  const S=$('#ox-s');
+  let t=0;
+  function getV(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim()||'#000';}
+  function step(){
+    const spo2=+S.value;
+    $('#ox-sv').textContent=spo2;
+    // Red/IR ratio empirical: R = AC_red/DC_red ÷ AC_IR/DC_IR. SpO2 ≈ 110 − 25R
+    const R = (110-spo2)/25;
+    $('#ox-r').textContent=R.toFixed(2);
+    $('#ox-read').innerHTML = spo2>=95?'<span class="good">Normal</span>': spo2>=90?'<span style="color:#c98a2b">Mild hypoxemia</span>':'<span class="warn">Low — clinical concern</span>';
+    ctx.clearRect(0,0,W,H);
+    const mid=H/2;
+    ctx.strokeStyle=getV('--rule'); ctx.beginPath(); ctx.moveTo(10,mid); ctx.lineTo(W-10,mid); ctx.stroke();
+    // two waveforms with different AC depth based on R
+    const drawWave=(color,ac_dc,offset,y)=>{
+      ctx.strokeStyle=color; ctx.lineWidth=2; ctx.beginPath();
+      for(let x=0;x<W-20;x++){
+        const phase=(x/70)+t;
+        const pulse=Math.max(0,Math.sin(phase*Math.PI)); // pulsatile
+        const Y=y-pulse*ac_dc*30-offset;
+        if(x===0) ctx.moveTo(10+x,Y); else ctx.lineTo(10+x,Y);
+      }
+      ctx.stroke();
+    };
+    // Red AC/DC bigger as SpO2 drops (more HHb absorbs red)
+    const redAC=0.25+R*0.15;
+    const irAC=0.35;
+    drawWave('#c0392b',redAC,0,mid-10);
+    drawWave('#2e86c1',irAC,0,mid+50);
+    ctx.fillStyle=getV('--muted'); ctx.font='11px ui-sans-serif';
+    ctx.fillText('Red (660 nm)',10,20); ctx.fillText('IR (940 nm)',10,mid+80);
+    t+=0.02;
+    requestAnimationFrame(step);
+  }
+  S.addEventListener('input',()=>{});
+  step();
+})();
+
+/* ---------- WHEATSTONE ---------- */
+(()=>{const svg=$('#wb-svg'); if(!svg) return;
+  const V=$('#wb-v'),R=$('#wb-r'),R2=$('#wb-r2'),RG=$('#wb-rg');
+  function draw(){
+    const v=+V.value, r=+R.value, r2=+R2.value, rg=+RG.value;
+    $('#wb-vv').textContent=v.toFixed(1); $('#wb-rv').textContent=r; $('#wb-r2v').textContent=r2; $('#wb-rgv').textContent=rg;
+    const vo = v*(rg/(r+rg) - r2/(r+r2));
+    $('#wb-vo').textContent=(vo*1000).toFixed(2)+' mV';
+    const bal=Math.abs(vo)<1e-4;
+    $('#wb-state').className=bal?'good':'warn';
+    $('#wb-state').textContent=bal?'balanced':(vo>0?'+ΔV · R_G grew':'−ΔV · R_G shrank');
+    // SVG bridge: square, supply top/bottom, meter left/right middles
+    const ink='var(--ink)', acc='var(--accent)';
+    svg.innerHTML=`
+      <g font-family="var(--sans)" font-size="11" fill="var(--muted)">
+      <!-- diamond path -->
+      <line x1="160" y1="20"  x2="280" y2="100" stroke="${ink}" stroke-width="1.5"/>
+      <line x1="280" y1="100" x2="160" y2="180" stroke="${ink}" stroke-width="1.5"/>
+      <line x1="160" y1="180" x2="40"  y2="100" stroke="${ink}" stroke-width="1.5"/>
+      <line x1="40"  y1="100" x2="160" y2="20"  stroke="${ink}" stroke-width="1.5"/>
+      <!-- labels on arms -->
+      <rect x="95"  y="48" width="36" height="18" fill="var(--paper)" stroke="${ink}"/>
+      <text x="113" y="61" text-anchor="middle" fill="${ink}">R₁</text>
+      <rect x="195" y="48" width="36" height="18" fill="var(--paper)" stroke="${ink}"/>
+      <text x="213" y="61" text-anchor="middle" fill="${ink}">R₂</text>
+      <rect x="95"  y="134" width="36" height="18" fill="var(--paper)" stroke="${ink}"/>
+      <text x="113" y="147" text-anchor="middle" fill="${ink}">R₃</text>
+      <rect x="195" y="134" width="36" height="18" fill="var(--paper)" stroke="${acc}" stroke-width="2"/>
+      <text x="213" y="147" text-anchor="middle" fill="${acc}" font-weight="600">R_G</text>
+      <!-- supply -->
+      <text x="160" y="14" text-anchor="middle">+ V_in</text>
+      <text x="160" y="196" text-anchor="middle">GND</text>
+      <!-- meter -->
+      <circle cx="40" cy="100" r="4" fill="${ink}"/>
+      <circle cx="280" cy="100" r="4" fill="${ink}"/>
+      <line x1="40" y1="100" x2="14" y2="100" stroke="${ink}" stroke-dasharray="3 2"/>
+      <line x1="280" y1="100" x2="306" y2="100" stroke="${ink}" stroke-dasharray="3 2"/>
+      <text x="10" y="96" text-anchor="start">A</text>
+      <text x="310" y="96" text-anchor="end">B</text>
+      <text x="160" y="108" text-anchor="middle" fill="${bal?'#229954':(vo>0?'#c0392b':'#2e86c1')}" font-weight="600">V_out = ${(vo*1000).toFixed(2)} mV</text>
+      </g>`;
+  }
+  [V,R,R2,RG].forEach(e=>e.addEventListener('input',draw)); draw();
+})();
+
+/* ---------- CANTILEVER ---------- */
+(()=>{const canvas=$('#ct-canvas'); if(!canvas) return;
+  const ctx=canvas.getContext('2d'), W=canvas.width,H=canvas.height;
+  const K=$('#ct-k'),M=$('#ct-m'),DM=$('#ct-dm');
+  function getV(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim()||'#000';}
+  let t=0;
+  function fr(k,m_ng){ // m in nanograms
+    const m=m_ng*1e-12; // kg
+    return (1/(2*Math.PI))*Math.sqrt(k/m);
+  }
+  function step(){
+    const k=+K.value, m=+M.value, dm=+DM.value;
+    $('#ct-kv').textContent=k.toFixed(2); $('#ct-mv').textContent=m.toFixed(1); $('#ct-dmv').textContent=dm.toFixed(1);
+    const f1=fr(k,m), f2=fr(k,m+dm);
+    const fmt=f=>f>1e6?(f/1e6).toFixed(2)+' MHz':f>1e3?(f/1e3).toFixed(2)+' kHz':f.toFixed(0)+' Hz';
+    $('#ct-fr').textContent=fmt(f1);
+    $('#ct-fr2').textContent=fmt(f2);
+    $('#ct-df').textContent=fmt(Math.abs(f1-f2));
+    ctx.clearRect(0,0,W,H);
+    // base wall
+    ctx.fillStyle=getV('--ink'); ctx.fillRect(30,30,10,H-60);
+    // beam — oscillating
+    const L=300, amp=10;
+    const freq = 3; // visual only
+    // draw multiple frames for motion blur feel
+    for(let i=0;i<3;i++){
+      const phase=t*freq - i*0.2;
+      const tip = Math.sin(phase)*amp;
+      ctx.strokeStyle=i===0?getV('--accent'):getV('--rule');
+      ctx.lineWidth=i===0?4:2; ctx.globalAlpha=i===0?1:0.35;
+      ctx.beginPath();
+      for(let x=0;x<L;x+=5){
+        const disp = tip*(x/L)*(x/L); // parabolic
+        const y = H/2 + disp;
+        if(x===0) ctx.moveTo(40+x,y); else ctx.lineTo(40+x,y);
+      }
+      ctx.stroke();
+    }
+    ctx.globalAlpha=1;
+    // mass ball
+    if(dm>0){
+      const phase=t*freq;
+      const tip = Math.sin(phase)*amp*(f1/f2); // slower when loaded
+      const dispTip = tip;
+      ctx.fillStyle=getV('--accent');
+      ctx.beginPath(); ctx.arc(40+L, H/2+dispTip, 5+Math.min(12,dm/2), 0, Math.PI*2); ctx.fill();
+    }
+    t+=0.05; requestAnimationFrame(step);
+  }
+  step();
+})();
+
+/* ---------- WPT RADAR ---------- */
+(()=>{const svg=$('#wpt-svg'); if(!svg) return;
+  const methods=[
+    {name:'Inductive',vals:[1,1,4,1,4,4],desc:'Near-field B-field. Short range, strong through skin, high efficiency — workhorse of implants and wearables.'},
+    {name:'Capacitive',vals:[1,1,4,1,4,4],desc:'Near-field E-field. Similar envelope to inductive but with capacitive plates instead of coils.'},
+    {name:'RF',vals:[2,2,3,2,3,3],desc:'MHz–GHz radio waves. Moderate everything — flexible but not class-leading.'},
+    {name:'Microwave',vals:[4,4,2,4,2,2],desc:'High directivity and long range. Penetrates tissue poorly, low end-to-end efficiency.'},
+    {name:'Optical NIR',vals:[4,4,1,4,2,2],desc:'Directional and longest range. Tissue absorbs NIR, so efficiency is low.'},
+    {name:'Ultrasound',vals:[2,4,1,3,3,2],desc:'PZT transducers (PMUTs/CMUTs), kHz. Long range, decent penetration, low efficiency. Couplant gel needed.'},
+  ];
+  const axes=['Directivity','Range','Freq (low↔high)','Penetrability','Efficiency','Compatibility'];
+  let cur=0;
+  function draw(){
+    const R=120, N=axes.length;
+    let html='';
+    // rings
+    for(let r=1;r<=4;r++){html+=`<circle cx="0" cy="0" r="${R*r/4}" fill="none" stroke="var(--rule)"/>`;}
+    // axes
+    axes.forEach((a,i)=>{const ang=-Math.PI/2+2*Math.PI*i/N; const x=R*Math.cos(ang),y=R*Math.sin(ang); html+=`<line x1="0" y1="0" x2="${x}" y2="${y}" stroke="var(--rule)"/><text x="${x*1.15}" y="${y*1.15}" text-anchor="middle" dominant-baseline="middle" font-size="11" fill="var(--muted)" font-family="var(--sans)">${a}</text>`;});
+    // polygon
+    const v=methods[cur].vals;
+    const pts=v.map((val,i)=>{const ang=-Math.PI/2+2*Math.PI*i/N; const r=R*val/4; return [r*Math.cos(ang),r*Math.sin(ang)].join(',');}).join(' ');
+    html+=`<polygon points="${pts}" fill="var(--accent)" fill-opacity=".25" stroke="var(--accent)" stroke-width="2"/>`;
+    v.forEach((val,i)=>{const ang=-Math.PI/2+2*Math.PI*i/N; const r=R*val/4; html+=`<circle cx="${r*Math.cos(ang)}" cy="${r*Math.sin(ang)}" r="3.5" fill="var(--accent)"/>`;});
+    svg.innerHTML=html;
+    $('#wpt-out').innerHTML=`<b>${methods[cur].name}.</b> <small>${methods[cur].desc}</small>`;
+  }
+  $('#wpt-tabs').addEventListener('click',e=>{if(e.target.dataset.t){cur=+e.target.dataset.t; [...e.target.parentNode.children].forEach(b=>b.classList.remove('on')); e.target.classList.add('on'); draw();}});
+  draw();
+})();
+
+/* ---------- SAR ---------- */
+(()=>{const T=$('#sar-tissue'),E=$('#sar-e'); if(!T) return;
+  function draw(){
+    const [sig,rho]=T.value.split(',').map(Number);
+    const e=+E.value;
+    $('#sar-mat').textContent=`${sig} / ${rho}`;
+    $('#sar-ev').textContent=e;
+    const sar=sig*e*e/rho;
+    let v,cls;
+    if(sar<0.08){v='✓ within whole-body limit'; cls='good';}
+    else if(sar<1.6){v='⚠ above whole-body but within localized limit'; cls='warn';}
+    else if(sar<4){v='⚠ localized-limit territory'; cls='warn';}
+    else {v='✗ exceeds safety limits — thermal risk'; cls='warn';}
+    $('#sar-val').textContent=sar<0.01?sar.toExponential(2)+' W/kg':sar.toFixed(3)+' W/kg';
+    const el=$('#sar-verdict'); el.textContent=v; el.className=cls;
+  }
+  [T,E].forEach(e=>e.addEventListener('input',draw)); draw();
+})();
+
+/* ============================================================
+   LEARNING UX
+============================================================ */
+const LS={get(k,d){try{const v=localStorage.getItem('bme:'+k);return v==null?d:JSON.parse(v);}catch(e){return d;}},set(k,v){try{localStorage.setItem('bme:'+k,JSON.stringify(v));}catch(e){}}};
+
+/* Topic tagging for quiz questions — indices 0-based */
+const quizTopic=i=>i<7?'act':i<14?'bio':i<23?'sen':'sys';
+
+/* ---------- Mastery store ---------- */
+const mastery={got:new Set(LS.get('mastery.got',[])),rev:new Set(LS.get('mastery.rev',[]))};
+function saveMastery(){LS.set('mastery.got',[...mastery.got]);LS.set('mastery.rev',[...mastery.rev]);updateProgress();}
+
+/* ---------- Progress pill ---------- */
+function countKeys(){
+  let total=0;
+  document.querySelectorAll('.fc').forEach((f,i)=>{total++; f.dataset.mk=f.dataset.mk||('fc:'+f.closest('.cards').dataset.deck+':'+i);});
+  document.querySelectorAll('.recall[data-id]').forEach(r=>total++);
+  return total;
+}
+function updateProgress(){
+  const total=countKeys();
+  const done=[...mastery.got].filter(k=>k.startsWith('fc:')||k.startsWith('r-')).length;
+  const b=$('#progressBar'),t=$('#progressTxt');
+  if(b){b.style.width=(total?(done/total)*100:0)+'%';}
+  if(t){t.innerHTML=`<b>${done}</b>/${total} mastered`;}
+}
+
+/* ---------- Retrieval prompts ---------- */
+document.querySelectorAll('.recall[data-id]').forEach(r=>{
+  const id=r.dataset.id;
+  if(mastery.got.has(id)) r.classList.add('got');
+  r.addEventListener('click',e=>{
+    if(e.target.closest('.score button')) return; // button handled below
+    r.classList.add('open');
+  });
+  r.querySelector('.score .got')?.addEventListener('click',e=>{e.stopPropagation();mastery.got.add(id);mastery.rev.delete(id);r.classList.add('got');saveMastery();});
+  r.querySelector('.score .rev')?.addEventListener('click',e=>{e.stopPropagation();mastery.rev.add(id);mastery.got.delete(id);r.classList.remove('got');saveMastery();});
+});
+
+/* ---------- Flashcards: mastery buttons + deck filter ---------- */
+document.querySelectorAll('.cards[data-deck]').forEach(deck=>{
+  const key='fc:'+deck.dataset.deck;
+  // inject mastery buttons into each card
+  deck.querySelectorAll('.fc').forEach((f,i)=>{
+    const id=key+':'+i;
+    f.dataset.mk=id;
+    if(mastery.got.has(id)) f.classList.add('got');
+    const mstr=document.createElement('div');
+    mstr.className='mstr';
+    mstr.innerHTML='<button class="g">✓ Got it</button><button class="r">Review again</button>';
+    f.appendChild(mstr);
+    mstr.querySelector('.g').addEventListener('click',e=>{e.stopPropagation();mastery.got.add(id);mastery.rev.delete(id);f.classList.add('got');saveMastery();});
+    mstr.querySelector('.r').addEventListener('click',e=>{e.stopPropagation();mastery.rev.add(id);mastery.got.delete(id);f.classList.remove('got');saveMastery();});
+  });
+  // inject deck controls above the deck
+  const ctrl=document.createElement('div');
+  ctrl.className='deck-ctrl';
+  ctrl.innerHTML='<button data-f="all" class="on">All</button><button data-f="review">To review</button><span class="count"></span>';
+  deck.parentNode.insertBefore(ctrl,deck);
+  function updateCount(){
+    const total=deck.querySelectorAll('.fc').length;
+    const got=[...deck.querySelectorAll('.fc')].filter(f=>f.classList.contains('got')).length;
+    ctrl.querySelector('.count').textContent=`${got} / ${total} mastered`;
+  }
+  ctrl.addEventListener('click',e=>{
+    const b=e.target.closest('button'); if(!b) return;
+    ctrl.querySelectorAll('button').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    const f=b.dataset.f;
+    deck.querySelectorAll('.fc').forEach(card=>{
+      const show = f==='all' || (f==='review' && !card.classList.contains('got'));
+      card.classList.toggle('hidden-by-filter', !show);
+    });
+  });
+  new MutationObserver(updateCount).observe(deck,{subtree:true,attributes:true,attributeFilter:['class']});
+  updateCount();
+});
+
+/* ---------- Quiz: persistence, topic filter, keyboard ---------- */
+(()=>{
+  // Load saved quiz state and re-render from it
+  const saved=LS.get('quiz.state',null);
+  if(saved && Array.isArray(saved) && saved.length===state.length){
+    for(let i=0;i<state.length;i++) state[i]=saved[i];
+    renderQuiz();
+  }
+  // Override reset to also wipe storage
+  const origReset=$('#resetQuiz').onclick;
+  $('#resetQuiz').onclick=()=>{origReset&&origReset(); LS.set('quiz.state',state);};
+  // MutationObserver catches every re-render triggered by answer clicks
+  const box=$('#quizBox');
+  function afterRender(){
+    box.querySelectorAll('.q-item').forEach(el=>{const i=+el.dataset.i; el.dataset.topic=quizTopic(i);});
+    LS.set('quiz.state',state);
+    applyQuizFilter();
+  }
+  new MutationObserver(afterRender).observe(box,{childList:true});
+
+  let qf='all';
+  function applyQuizFilter(){
+    box.querySelectorAll('.q-item').forEach(el=>{
+      const i=+el.dataset.i;
+      const top=quizTopic(i);
+      let show=true;
+      if(qf==='all') show=true;
+      else if(qf==='wrong') show = state[i]!==null && state[i]!==Q[i].a;
+      else if(qf==='unanswered') show = state[i]===null;
+      else show = top===qf;
+      el.classList.toggle('hidden-by-filter',!show);
+    });
+  }
+  $('#quizFilter')?.addEventListener('click',e=>{
+    const b=e.target.closest('button'); if(!b) return;
+    $('#quizFilter').querySelectorAll('button').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on'); qf=b.dataset.f; applyQuizFilter();
+  });
+  afterRender();
+})();
+
+/* ---------- Help overlay ---------- */
+const help=$('#help');
+$('#helpBtn').onclick=()=>help.classList.add('open');
+help.addEventListener('click',()=>help.classList.remove('open'));
+
+/* ---------- Cheat sheet mode ---------- */
+if(LS.get('cheat',false)) document.body.classList.add('cheat');
+$('#cheatBtn').onclick=()=>{document.body.classList.toggle('cheat');LS.set('cheat',document.body.classList.contains('cheat'));};
+
+/* ---------- Keyboard ---------- */
+let gBuffer='';
+window.addEventListener('keydown',e=>{
+  if(e.target.matches('input,textarea,select')) return;
+  if(palette.classList.contains('open')) return; // palette has its own
+  const k=e.key;
+  if(k==='Escape'){help.classList.remove('open'); return;}
+  if(k==='?'){e.preventDefault(); help.classList.toggle('open'); return;}
+  if(k==='/'){e.preventDefault(); openPalette(); return;}
+  if(k==='c' && !e.metaKey && !e.ctrlKey){e.preventDefault(); $('#cheatBtn').click(); return;}
+  if(k==='t' && !e.metaKey && !e.ctrlKey){e.preventDefault(); $('#themeBtn').click(); return;}
+  if(k==='g'){gBuffer += 'g'; if(gBuffer==='gg'){window.scrollTo({top:0,behavior:'smooth'});gBuffer='';} setTimeout(()=>gBuffer='',500); return;}
+  // Quiz keys only when a quiz card is "focused" (in viewport and no other interaction)
+  if(['1','2','3','4'].includes(k)){
+    const focus = findVisibleQuizCard();
+    if(focus){const btn=focus.querySelectorAll('button[data-j]')[+k-1]; if(btn && !btn.disabled){e.preventDefault(); btn.click();}}
+  }
+  if(k==='n' || k==='p'){
+    const cards=[...document.querySelectorAll('#quizBox .q-item:not(.hidden-by-filter)')];
+    const unans=cards.filter(c=>!c.classList.contains('answered'));
+    if(unans.length){e.preventDefault(); const target = k==='n' ? unans[0] : unans[unans.length-1]; target.scrollIntoView({block:'center',behavior:'smooth'});}
+  }
+  if(k===' '){
+    const fc = findFocusedFlashcard();
+    if(fc){e.preventDefault(); fc.classList.toggle('open');}
+    else {
+      const rc = findVisibleRecall();
+      if(rc && !rc.classList.contains('open')){e.preventDefault(); rc.classList.add('open');}
+    }
+  }
+});
+function findVisibleQuizCard(){
+  const cards=document.querySelectorAll('#quizBox .q-item:not(.hidden-by-filter):not(.answered)');
+  for(const c of cards){const r=c.getBoundingClientRect(); if(r.top>60 && r.top<window.innerHeight-120) return c;}
+  return null;
+}
+function findFocusedFlashcard(){
+  const fcs=document.querySelectorAll('.fc:not(.hidden-by-filter)');
+  for(const f of fcs){const r=f.getBoundingClientRect(); if(r.top>80 && r.bottom<window.innerHeight-60 && r.left>0) return f;}
+  return null;
+}
+function findVisibleRecall(){
+  const rcs=document.querySelectorAll('.recall');
+  for(const r of rcs){const rect=r.getBoundingClientRect(); if(rect.top>80 && rect.top<window.innerHeight-120) return r;}
+  return null;
+}
+
+/* Reset progress when pill clicked */
+$('#progressPill').addEventListener('click',e=>{
+  if(!confirm('Reset all mastered flags? (Quiz answers are separate.)')) return;
+  mastery.got.clear(); mastery.rev.clear(); saveMastery();
+  document.querySelectorAll('.fc.got, .recall.got').forEach(el=>el.classList.remove('got'));
+});
+
+/* Theme change repaint canvas widgets */
+new MutationObserver(()=>{document.querySelectorAll('canvas').forEach(c=>{const e=new Event('input'); c.closest('.lab')?.querySelectorAll('input,select').forEach(i=>i.dispatchEvent(e));});}).observe(document.documentElement,{attributes:true,attributeFilter:['class']});
+
+updateProgress();
+
+</script>
+</body>
+</html>
