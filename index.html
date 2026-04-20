@@ -39,13 +39,13 @@ header{position:sticky;top:0;z-index:40;background:color-mix(in oklab,var(--pape
 .bar .spacer{flex:1;min-width:0}
 .bar button,.bar .kbd{font-family:var(--sans);font-size:13px;background:transparent;border:1px solid var(--rule);color:var(--ink);padding:0 12px;border-radius:6px;cursor:pointer;height:32px;min-width:56px;display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;white-space:nowrap;flex-shrink:0}
 .bar button:hover{border-color:var(--ink)}
-.bar button.on,body.cheat #cheatBtn{background:var(--accent);color:#fff;border-color:var(--accent)}
+.bar button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
 .kbd{color:var(--muted);gap:8px}
 .kbd b{font-family:var(--mono);font-weight:500;font-size:12px}
 .bar .menu-btn{display:none!important;min-width:40px;padding:0 10px}
 @media(max-width:900px){.bar .menu-btn{display:inline-flex!important}.title .sub{display:none}}
 @media(max-width:720px){.kbd span{display:none}.kbd{min-width:40px!important;padding:0 8px!important}#progressPill{display:none}}
-@media(max-width:520px){#cheatBtn,#helpBtn{display:none}.bar{gap:6px;padding:10px 12px}.bar button,.bar .kbd{min-width:44px;padding:0 8px;font-size:12.5px}}
+@media(max-width:520px){#helpBtn{display:none}.bar{gap:6px;padding:10px 12px}.bar button,.bar .kbd{min-width:44px;padding:0 8px;font-size:12.5px}}
 
 /* Sidebar */
 .side{position:sticky;top:53px;align-self:start;max-height:calc(100vh - 53px);overflow:auto;padding:clamp(16px,2vw,28px) clamp(12px,1.4vw,20px) 60px clamp(14px,1.6vw,24px);font-family:var(--sans);font-size:clamp(12.5px,0.8vw + 8px,13.5px);border-right:1px solid var(--rule)}
@@ -239,14 +239,6 @@ html.dark .lab .good{color:#7ed3a7}
 .help dd{margin:0;color:var(--muted);font-size:13px}
 .help .close{margin-top:16px;font-size:12px;color:var(--muted);text-align:right}
 
-/* Cheat-sheet mode */
-body.cheat .lede p.sub,body.cheat section > .intro,body.cheat .def,body.cheat .tip,body.cheat .recall,body.cheat .lab,body.cheat .cards,body.cheat .deck-ctrl{display:none!important}
-body.cheat section h3 + .block > ul,body.cheat .block > ul{margin-top:4px}
-body.cheat .block > ul > li > ul{display:none}
-body.cheat .block{margin:6px 0}
-body.cheat h3{margin-top:14px}
-body.cheat .note{padding:4px 10px;margin:6px 0;font-size:13px}
-body.cheat .note small{display:none}
 </style>
 </head>
 <body>
@@ -257,7 +249,6 @@ body.cheat .note small{display:none}
     <div class="spacer"></div>
     <span class="pill-pr" id="progressPill" title="Concepts mastered (click to reset)"><span class="bar"><span id="progressBar"></span></span> <span id="progressTxt"><b>0</b>/0</span></span>
     <span class="kbd" id="searchOpen" title="Search"><span>Search</span> <b>⌘K</b></span>
-    <button id="cheatBtn" title="Cheat-sheet mode (toggle to compact view for final cram)">Cheat</button>
     <button id="quizJump" title="Jump to quiz">Quiz</button>
     <button id="helpBtn" title="Keyboard shortcuts">?</button>
     <button id="themeBtn" title="Toggle theme">☾</button>
@@ -1193,7 +1184,6 @@ body.cheat .note small{display:none}
       <dt>n / p</dt><dd>Next / previous unanswered quiz question</dd>
       <dt>Space</dt><dd>Reveal focused flashcard or quick-check</dd>
       <dt>g g</dt><dd>Go to top</dd>
-      <dt>c</dt><dd>Toggle cheat-sheet mode</dd>
       <dt>t</dt><dd>Toggle theme</dd>
       <dt>Esc</dt><dd>Close overlays</dd>
       <dt>?</dt><dd>This panel</dd>
@@ -2239,10 +2229,6 @@ const help=$('#help');
 $('#helpBtn').onclick=()=>help.classList.add('open');
 help.addEventListener('click',()=>help.classList.remove('open'));
 
-/* ---------- Cheat sheet mode ---------- */
-if(LS.get('cheat',false)) document.body.classList.add('cheat');
-$('#cheatBtn').onclick=()=>{document.body.classList.toggle('cheat');LS.set('cheat',document.body.classList.contains('cheat'));};
-
 /* ---------- Keyboard ---------- */
 let gBuffer='';
 window.addEventListener('keydown',e=>{
@@ -2252,7 +2238,6 @@ window.addEventListener('keydown',e=>{
   if(k==='Escape'){help.classList.remove('open'); return;}
   if(k==='?'){e.preventDefault(); help.classList.toggle('open'); return;}
   if(k==='/'){e.preventDefault(); openPalette(); return;}
-  if(k==='c' && !e.metaKey && !e.ctrlKey){e.preventDefault(); $('#cheatBtn').click(); return;}
   if(k==='t' && !e.metaKey && !e.ctrlKey){e.preventDefault(); $('#themeBtn').click(); return;}
   if(k==='g'){gBuffer += 'g'; if(gBuffer==='gg'){window.scrollTo({top:0,behavior:'smooth'});gBuffer='';} setTimeout(()=>gBuffer='',500); return;}
   // Quiz keys only when a quiz card is "focused" (in viewport and no other interaction)
