@@ -29,7 +29,7 @@ a:hover{text-decoration:underline;text-underline-offset:3px}
 
 /* Layout */
 .shell{display:grid;grid-template-columns:clamp(200px,18vw,260px) minmax(0,1fr);max-width:1500px;margin:0 auto}
-@media(max-width:900px){.shell{grid-template-columns:1fr}.side{display:none}.side.open{display:block;position:fixed;inset:0;z-index:50;background:var(--paper);padding:16px 20px;overflow:auto}}
+@media(max-width:900px){.shell{grid-template-columns:1fr}.side{position:fixed;top:0;left:0;bottom:0;width:min(86vw,320px);max-height:none;z-index:51;background:var(--paper);padding:20px 20px 60px;overflow:auto;border-right:1px solid var(--rule);transform:translateX(-100%);transition:transform .22s ease;box-shadow:0 10px 40px rgba(0,0,0,.18)}.side.open{transform:translateX(0)}.side-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:50;opacity:0;pointer-events:none;transition:opacity .22s ease}.side-backdrop.open{opacity:1;pointer-events:auto}}
 
 /* Top bar */
 header{position:sticky;top:0;z-index:40;background:color-mix(in oklab,var(--paper) 94%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--rule)}
@@ -263,6 +263,7 @@ body.cheat .note small{display:none}
   </div>
 </header>
 
+<div class="side-backdrop" id="sideBackdrop"></div>
 <div class="shell">
 <aside class="side" id="side">
   <nav class="grp" data-topic="act">
@@ -1450,7 +1451,13 @@ const headObs=new IntersectionObserver(entries=>{
 document.querySelectorAll('h3[id]').forEach(el=>{if(subMap.has(el.id)) headObs.observe(el);});
 
 /* mobile menu */
-document.getElementById('menuBtn').onclick=()=>side.classList.toggle('open');
+const sideBackdrop=document.getElementById('sideBackdrop');
+const openSide=()=>{side.classList.add('open');sideBackdrop.classList.add('open');};
+const closeSide=()=>{side.classList.remove('open');sideBackdrop.classList.remove('open');};
+document.getElementById('menuBtn').onclick=()=>side.classList.contains('open')?closeSide():openSide();
+sideBackdrop.onclick=closeSide;
+side.addEventListener('click',e=>{if(e.target.tagName==='A'&&window.innerWidth<=900)closeSide();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&side.classList.contains('open'))closeSide();});
 
 /* Initial route */
 routeFromHash();
