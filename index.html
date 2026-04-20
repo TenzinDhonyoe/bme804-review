@@ -41,8 +41,8 @@ header{position:sticky;top:0;z-index:40;background:color-mix(in oklab,var(--pape
 .bar button:hover{border-color:var(--ink)}
 .kbd{color:var(--muted);gap:8px}
 .kbd b{font-family:var(--mono);font-weight:500;font-size:12px}
-.menu-btn{display:none;min-width:40px!important;padding:0 10px!important}
-@media(max-width:900px){.menu-btn{display:inline-flex}.title .sub{display:none}}
+.bar .menu-btn{display:none!important;min-width:40px;padding:0 10px}
+@media(max-width:900px){.bar .menu-btn{display:inline-flex!important}.title .sub{display:none}}
 @media(max-width:720px){.kbd span{display:none}.kbd{min-width:40px!important;padding:0 8px!important}#progressPill{display:none}}
 @media(max-width:520px){#cheatBtn,#helpBtn{display:none}.bar{gap:6px;padding:10px 12px}.bar button,.bar .kbd{min-width:44px;padding:0 8px;font-size:12.5px}}
 
