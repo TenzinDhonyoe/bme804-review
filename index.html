@@ -57,11 +57,12 @@ header{position:sticky;top:0;z-index:40;background:color-mix(in oklab,var(--pape
 main > section.topic-hidden{display:none}
 
 /* Main */
-main{padding:40px 80px 120px;min-width:0}
+main{padding:28px 80px 120px;min-width:0}
 @media(max-width:900px){main{padding:24px 20px 80px}}
 .lede{max-width:68ch}
 h1{font-family:var(--sans);font-weight:700;font-size:32px;letter-spacing:-.01em;margin:0 0 8px}
 h2{font-family:var(--sans);font-weight:700;font-size:22px;letter-spacing:-.01em;margin:56px 0 10px;padding-top:18px;border-top:1px solid var(--rule)}
+main > section:first-of-type > h2:first-child{margin-top:0;padding-top:0;border-top:none}
 h3{font-family:var(--sans);font-weight:600;font-size:16px;margin:24px 0 6px}
 p.sub{color:var(--muted);font-size:15px;margin:2px 0 0;font-family:var(--sans)}
 section > .intro{color:var(--muted);margin:2px 0 8px;max-width:68ch}
@@ -213,7 +214,7 @@ html.dark .lab .good{color:#7ed3a7}
 .deck-ctrl button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
 
 /* Top-bar progress pill */
-.pill-pr{display:inline-flex;gap:6px;align-items:center;padding:4px 10px;border-radius:999px;border:1px solid var(--rule);font-size:12px;color:var(--muted);font-family:var(--sans)}
+.pill-pr{display:inline-flex;gap:8px;align-items:center;padding:0 12px;height:32px;border-radius:999px;border:1px solid var(--rule);font-size:12px;color:var(--muted);font-family:var(--sans);box-sizing:border-box}
 .pill-pr b{color:var(--accent);font-weight:600}
 .pill-pr .bar{display:inline-block;width:60px;height:4px;background:var(--rule);border-radius:999px;overflow:hidden}
 .pill-pr .bar span{display:block;height:100%;width:0;background:var(--accent);transition:width .3s}
