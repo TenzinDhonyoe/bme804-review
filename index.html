@@ -307,7 +307,7 @@ html.dark .lab .good{color:#7ed3a7}
   </nav>
   <nav class="grp" data-topic="quiz">
     <h4><a href="#quiz">Self-test</a></h4>
-    <a href="#quiz">30-question quiz</a>
+    <a href="#quiz">Full quiz</a>
   </nav>
 </aside>
 
@@ -1149,7 +1149,7 @@ html.dark .lab .good{color:#7ed3a7}
 
 <!-- ========================= QUIZ ========================= -->
 <section id="quiz">
-  <h2>Self-test — 30 questions</h2>
+  <h2>Self-test</h2>
   <p class="intro">Click an answer for instant feedback and an explanation. Answers persist across reloads. Use keys <kbd style="font-family:var(--mono);font-size:12px;background:var(--accent-soft);padding:1px 6px;border-radius:3px;border:1px solid var(--rule)">1</kbd>–<kbd style="font-family:var(--mono);font-size:12px;background:var(--accent-soft);padding:1px 6px;border-radius:3px;border:1px solid var(--rule)">4</kbd> to answer and <kbd style="font-family:var(--mono);font-size:12px;background:var(--accent-soft);padding:1px 6px;border-radius:3px;border:1px solid var(--rule)">n</kbd> to jump to the next unanswered question.</p>
   <div class="quiz-ctrl" id="quizFilter">
     <button data-f="all" class="on">All</button>
@@ -1159,6 +1159,7 @@ html.dark .lab .good{color:#7ed3a7}
     <button data-f="sys">System</button>
     <button data-f="wrong" style="margin-left:auto">Retake wrong only</button>
     <button data-f="unanswered">Unanswered</button>
+    <button id="shuffleQuiz" title="Shuffle question order">🔀 Shuffle</button>
   </div>
   <div class="score">
     <div><b id="scoreNum">0 / 0</b> answered</div>
@@ -1300,42 +1301,69 @@ document.querySelectorAll('.cards[data-deck]').forEach(c=>{
 
 /* ========== quiz ========== */
 const Q=[
-  {q:"Electrostatic force between parallel plates scales as:",o:["V, A, 1/x","V², A, 1/x²","V², A², 1/x","V, A², 1/x³"],a:1,e:"F = ½·ε₀εᵣA·V²/x² — V squared, area, and the inverse square of plate distance."},
-  {q:"'Pull-in voltage' means:",o:["The plates start oscillating","The dielectric fails","The movable plate snaps onto and sticks to the fixed plate","Maximum safe operating voltage"],a:2,e:"Above the pull-in voltage the movable and fixed parts stick together."},
-  {q:"Comb-drive actuators produce motion that is:",o:["Out-of-plane","In-plane","Rotational only","Thermal"],a:1,e:"Interdigitated fingers slide past each other in-plane."},
-  {q:"The direct piezoelectric effect converts:",o:["Voltage into strain","Stress into charge/voltage","Temperature into voltage","Magnetic field into force"],a:1,e:"Direct = sensing (stress → charge). Converse = actuating (voltage → strain)."},
-  {q:"Which material has the highest d₃₃?",o:["Quartz","ZnO","PZT ceramic","AlN"],a:2,e:"PZT ≈ 220 pC/N (up to 600) — far above quartz 2–3, ZnO 12, AlN 5."},
-  {q:"Soft Ecoflex microrobots are magnetized with:",o:["Iron oxide","NdFeB hard magnetic microparticles","Permalloy","Ferrofluid"],a:1,e:"~5 µm NdFeB particles; controlled by a time-varying magnetic field."},
-  {q:"IPMCs bend because:",o:["Thermal expansion of water","Cations migrate and drag solvent, swelling one side","Piezoelectric strain","Electromagnetic Lorentz force"],a:1,e:"E-field moves cations toward one plate; cations drag solvent → biomorph bending."},
-  {q:"A biosensor consists of:",o:["Transducer only","Recognition element + transducer + amplifier","Microfluidic channel only","Electrode + battery"],a:1,e:"Recognition (enzyme / Ab / NA / aptamer) + transducer + amplifier → output."},
-  {q:"Aptamers are:",o:["Proteins like antibodies","Short single-stranded DNA/RNA","Enzymes","Metal catalysts"],a:1,e:"Synthetic nucleic acids, produced via SELEX."},
-  {q:"Which ELISA is best for small antigens at low concentrations?",o:["Direct","Indirect","Sandwich","Competitive"],a:3,e:"Competitive ELISA excels at small antigens at low concentrations."},
-  {q:"Adsorption, entrapment and encapsulation are examples of:",o:["Chemical immobilization","Physical immobilization","Covalent bonding","Amperometry"],a:1,e:"Physical (reversible) techniques. Covalent and cross-linking are chemical."},
-  {q:"PCR was invented in:",o:["1953 by Watson","1983 by Mullis","1972 by Berg","2003 by Venter"],a:1,e:"Kary Mullis, 1983."},
-  {q:"The 3 PCR steps, in order, are:",o:["Annealing → Extension → Denaturation","Extension → Denaturation → Annealing","Denaturation → Annealing → Extension","Hybridization → Ligation → Elongation"],a:2,e:"Denaturation → Annealing → Extension."},
-  {q:"In a lateral-flow strip, capillary forces draw the sample from:",o:["Absorbent pad toward the sample pad","Sample pad toward the absorbent pad","Detection membrane to the probe pad","Control line to the test line"],a:1,e:"Sample → probe pad → detection membrane → absorbent pad."},
-  {q:"Sensitivity of a sensor is:",o:["The offset","dS/dX — slope of the transfer curve","1/noise","Settling time"],a:1,e:"Sensitivity is the slope of the output–input transfer curve."},
-  {q:"The time constant τ corresponds to an output of:",o:["50%","63.2%","90%","99%"],a:1,e:"For a first-order system, τ is when the output reaches 63.2% of the final value."},
-  {q:"Type K thermocouple is:",o:["Iron/Constantan","Chromel/Alumel","Copper/Constantan","Pt-Rh/Pt"],a:1,e:"Type K = Chromel/Alumel, 39.48 µV/°C, up to 1372 °C."},
-  {q:"Potentiometric sensors measure voltage at:",o:["Maximum current","Zero current","Fixed current","Varying current"],a:1,e:"Potentiometry: ISE vs RE at zero current — Nernst equation."},
-  {q:"The Cottrell equation gives:",o:["V as a function of pH","Current as a function of time in amperometry","SAR in tissue","The Seebeck voltage"],a:1,e:"i = nFAC₀·√D / √(πt)."},
-  {q:"In impedance flow cytometry, low frequencies (<1 MHz) reveal:",o:["Cytoplasm conductivity","Cell volume (size)","Membrane composition","DNA content"],a:1,e:"Low-f ΔZ/Z reflects volume; high-f adds cytoplasm conductivity → cell type."},
-  {q:"Pulse oximetry uses the ratio of:",o:["Blue / green light","Red / IR light absorbance","UV / visible","Phosphorescence lifetimes"],a:1,e:"O₂Hb absorbs more IR, HHb more red → Red/IR modulation ratio."},
-  {q:"Stoney's equation relates:",o:["Resonant frequency to mass","Cantilever deflection to surface stress","Current to concentration","Voltage to strain"],a:1,e:"Δz = 3(1 − ν)·L² / (E·t²) · Δσ — static microcantilever mode."},
-  {q:"Gauge factor G_F =",o:["ρL/A","(ΔR/R)/(ΔL/L)","V/I","ε₀εᵣA/d"],a:1,e:"Relative resistance change per relative length change — piezoresistive sensitivity."},
-  {q:"Au/Si eutectic bonding temperature is approximately:",o:["150 °C","363 °C","660 °C","1000 °C"],a:1,e:"363 °C for Au 81.4% / Si 18.6%."},
-  {q:"Anodic bonding requires:",o:["UV cure","Na⁺ polarization in glass, 180–500 °C, 200–1500 V","Vacuum only","Eutectic alloy"],a:1,e:"Electrochemical process, Na⁺ drifts to the cathode, Si–O–Si forms at the interface."},
-  {q:"Which material allows moisture through FASTEST?",o:["Metals","Glasses","Silicones","Epoxies"],a:2,e:"Silicones > Epoxies > Fluoro-carbons > Glasses > Metals."},
-  {q:"3D chip stacking uses … for chip-to-chip connections:",o:["Wire bonds only","Through-substrate vias (TSVs)","Optical fibers","Capacitive coupling"],a:1,e:"TSVs pass through the substrate to shorten interconnects and reduce footprint."},
-  {q:"Implantable photovoltaics work best in the:",o:["UV","Visible blue","NIR (near-infrared)","Microwave"],a:2,e:"NIR has the maximum transmittance through tissue."},
-  {q:"SAR formula:",o:["σE²/ρ","ρE²/σ","σ/ρE","E/σρ"],a:0,e:"SAR = σE² / ρ. Tissue T rise < 1–2 °C."},
-  {q:"Fibrotic encapsulation around an implant is:",o:["Always harmful","Bioinert — fixes implant but can insulate electrodes","An immune rejection","A sign of infection"],a:1,e:"No immune response — good for fixation, bad for electrical coupling."},
+  {t:"act",q:"Electrostatic force between parallel plates scales as:",o:["V, A, 1/x","V², A, 1/x²","V², A², 1/x","V, A², 1/x³"],a:1,e:"F = ½·ε₀εᵣA·V²/x² — V squared, area, and the inverse square of plate distance."},
+  {t:"act",q:"'Pull-in voltage' means:",o:["The plates start oscillating","The dielectric fails","The movable plate snaps onto and sticks to the fixed plate","Maximum safe operating voltage"],a:2,e:"Above the pull-in voltage the movable and fixed parts stick together."},
+  {t:"act",q:"Comb-drive actuators produce motion that is:",o:["Out-of-plane","In-plane","Rotational only","Thermal"],a:1,e:"Interdigitated fingers slide past each other in-plane."},
+  {t:"act",q:"The direct piezoelectric effect converts:",o:["Voltage into strain","Stress into charge/voltage","Temperature into voltage","Magnetic field into force"],a:1,e:"Direct = sensing (stress → charge). Converse = actuating (voltage → strain)."},
+  {t:"act",q:"Which material has the highest d₃₃?",o:["Quartz","ZnO","PZT ceramic","AlN"],a:2,e:"PZT ≈ 220 pC/N (up to 600) — far above quartz 2–3, ZnO 12, AlN 5."},
+  {t:"act",q:"Soft Ecoflex microrobots are magnetized with:",o:["Iron oxide","NdFeB hard magnetic microparticles","Permalloy","Ferrofluid"],a:1,e:"~5 µm NdFeB particles; controlled by a time-varying magnetic field."},
+  {t:"act",q:"IPMCs bend because:",o:["Thermal expansion of water","Cations migrate and drag solvent, swelling one side","Piezoelectric strain","Electromagnetic Lorentz force"],a:1,e:"E-field moves cations toward one plate; cations drag solvent → biomorph bending."},
+  {t:"act",q:"A thermal bimorph actuator bends because:",o:["Two materials with different CTE are bonded","Piezoelectric strain","Magnetic force","Ionic migration"],a:0,e:"The layer with higher coefficient of thermal expansion elongates more on heating, bending the stack."},
+  {t:"act",q:"The main drawback of electrostatic actuation in aqueous biological fluids is:",o:["High power consumption","Ionic screening of the electric field","Mechanical wear","Thermal drift"],a:1,e:"Mobile ions in solution shield the field, collapsing the actuation force."},
+  {t:"act",q:"Nitinol SMA typically transitions (austenite finish) near:",o:["0 °C","~37–70 °C (body temp range)","150 °C","300 °C"],a:1,e:"Nitinol can be trained to transform near body temperature — useful for implantable stents."},
+  {t:"act",q:"Converse piezoelectric strain is … the applied electric field:",o:["Quadratic in","Linear in","Independent of","Inverse-square with"],a:1,e:"Strain S = d·E for small fields — linear, which is why piezo drives are easy to control."},
+  {t:"act",q:"Iontophoretic drug delivery moves drug across skin using:",o:["Ultrasound","A small DC electric field driving charged molecules","Osmotic pressure","A piezoelectric pump"],a:1,e:"Charged drug ions migrate under an applied electric field — mostly painless, low-current."},
+  {t:"bio",q:"A biosensor consists of:",o:["Transducer only","Recognition element + transducer + amplifier","Microfluidic channel only","Electrode + battery"],a:1,e:"Recognition (enzyme / Ab / NA / aptamer) + transducer + amplifier → output."},
+  {t:"bio",q:"Aptamers are:",o:["Proteins like antibodies","Short single-stranded DNA/RNA","Enzymes","Metal catalysts"],a:1,e:"Synthetic nucleic acids, produced via SELEX."},
+  {t:"bio",q:"Which ELISA is best for small antigens at low concentrations?",o:["Direct","Indirect","Sandwich","Competitive"],a:3,e:"Competitive ELISA excels at small antigens at low concentrations."},
+  {t:"bio",q:"Adsorption, entrapment and encapsulation are examples of:",o:["Chemical immobilization","Physical immobilization","Covalent bonding","Amperometry"],a:1,e:"Physical (reversible) techniques. Covalent and cross-linking are chemical."},
+  {t:"bio",q:"PCR was invented in:",o:["1953 by Watson","1983 by Mullis","1972 by Berg","2003 by Venter"],a:1,e:"Kary Mullis, 1983."},
+  {t:"bio",q:"The 3 PCR steps, in order, are:",o:["Annealing → Extension → Denaturation","Extension → Denaturation → Annealing","Denaturation → Annealing → Extension","Hybridization → Ligation → Elongation"],a:2,e:"Denaturation → Annealing → Extension."},
+  {t:"bio",q:"In a lateral-flow strip, capillary forces draw the sample from:",o:["Absorbent pad toward the sample pad","Sample pad toward the absorbent pad","Detection membrane to the probe pad","Control line to the test line"],a:1,e:"Sample → probe pad → detection membrane → absorbent pad."},
+  {t:"bio",q:"SELEX stands for:",o:["Single-Enzyme Ligand Exchange","Systematic Evolution of Ligands by EXponential enrichment","Selective Elution of X-proteins","Sequence Editing via Ligation Extension"],a:1,e:"Iterative selection of high-affinity aptamers from a random oligonucleotide pool."},
+  {t:"bio",q:"Glucose oxidase biosensors detect glucose via:",o:["Direct fluorescence","H₂O₂ generated at an electrode (amperometric)","pH change only","Optical rotation"],a:1,e:"GOx oxidizes glucose → gluconolactone + H₂O₂; the H₂O₂ is oxidized at the working electrode."},
+  {t:"bio",q:"The control line on a lateral-flow test indicates:",o:["The analyte concentration","The sample flowed through and reagents are active","The battery level","A positive result"],a:1,e:"Always appears if the strip worked — independent of whether analyte is present."},
+  {t:"bio",q:"A DNA microarray's spots are:",o:["Randomly deposited cells","Known single-stranded probes at defined locations","Random antibodies","Gold nanoparticles"],a:1,e:"Thousands of known probe sequences are spotted; hybridization of a labeled target reveals expression."},
+  {t:"bio",q:"Non-enzymatic glucose sensors typically rely on:",o:["Glucose oxidase","Metal/metal-oxide catalysts (Pt, Ni, Cu) oxidizing glucose directly","Fluorescent antibodies","Capacitive coupling"],a:1,e:"Avoid enzyme degradation; direct electrocatalysis of glucose at the electrode surface."},
+  {t:"sen",q:"Sensitivity of a sensor is:",o:["The offset","dS/dX — slope of the transfer curve","1/noise","Settling time"],a:1,e:"Sensitivity is the slope of the output–input transfer curve."},
+  {t:"sen",q:"The time constant τ corresponds to an output of:",o:["50%","63.2%","90%","99%"],a:1,e:"For a first-order system, τ is when the output reaches 63.2% of the final value."},
+  {t:"sen",q:"Type K thermocouple is:",o:["Iron/Constantan","Chromel/Alumel","Copper/Constantan","Pt-Rh/Pt"],a:1,e:"Type K = Chromel/Alumel, 39.48 µV/°C, up to 1372 °C."},
+  {t:"sen",q:"Potentiometric sensors measure voltage at:",o:["Maximum current","Zero current","Fixed current","Varying current"],a:1,e:"Potentiometry: ISE vs RE at zero current — Nernst equation."},
+  {t:"sen",q:"The Cottrell equation gives:",o:["V as a function of pH","Current as a function of time in amperometry","SAR in tissue","The Seebeck voltage"],a:1,e:"i = nFAC₀·√D / √(πt)."},
+  {t:"sen",q:"In impedance flow cytometry, low frequencies (<1 MHz) reveal:",o:["Cytoplasm conductivity","Cell volume (size)","Membrane composition","DNA content"],a:1,e:"Low-f ΔZ/Z reflects volume; high-f adds cytoplasm conductivity → cell type."},
+  {t:"sen",q:"Pulse oximetry uses the ratio of:",o:["Blue / green light","Red / IR light absorbance","UV / visible","Phosphorescence lifetimes"],a:1,e:"O₂Hb absorbs more IR, HHb more red → Red/IR modulation ratio."},
+  {t:"sen",q:"Stoney's equation relates:",o:["Resonant frequency to mass","Cantilever deflection to surface stress","Current to concentration","Voltage to strain"],a:1,e:"Δz = 3(1 − ν)·L² / (E·t²) · Δσ — static microcantilever mode."},
+  {t:"sen",q:"Gauge factor G_F =",o:["ρL/A","(ΔR/R)/(ΔL/L)","V/I","ε₀εᵣA/d"],a:1,e:"Relative resistance change per relative length change — piezoresistive sensitivity."},
+  {t:"sen",q:"An NTC thermistor's resistance:",o:["Rises with temperature","Falls with temperature","Is constant","Depends only on voltage"],a:1,e:"Negative Temperature Coefficient — R decreases exponentially with T (useful for body-temp monitoring)."},
+  {t:"sen",q:"A Wheatstone bridge is commonly used to:",o:["Rectify AC","Detect small resistance changes (e.g., strain)","Amplify current","Measure temperature only"],a:1,e:"Balanced bridge converts tiny ΔR into a differential voltage — ideal for strain gauges and RTDs."},
+  {t:"sen",q:"The Seebeck effect converts:",o:["Voltage to temperature","A temperature gradient into a voltage","Pressure to current","Strain to charge"],a:1,e:"Temperature difference across dissimilar metals → EMF. Basis of thermocouples."},
+  {t:"sen",q:"Silicon piezoresistors have gauge factors around:",o:["~2","~100","~1000","~0.1"],a:1,e:"Silicon G_F ≈ 100 vs ~2 for metal foil gauges — much more sensitive but more temperature-dependent."},
+  {t:"sen",q:"Selectivity describes a sensor's ability to:",o:["Respond quickly","Distinguish the target from interferents","Resist drift","Operate at low power"],a:1,e:"High selectivity = minimal cross-reactivity with other species in the sample."},
+  {t:"sen",q:"Amperometry measures:",o:["Voltage at zero current","Current at a fixed applied potential","Resistance","Capacitance"],a:1,e:"Fix E, measure i — current proportional to analyte flux at the electrode."},
+  {t:"sys",q:"Au/Si eutectic bonding temperature is approximately:",o:["150 °C","363 °C","660 °C","1000 °C"],a:1,e:"363 °C for Au 81.4% / Si 18.6%."},
+  {t:"sys",q:"Anodic bonding requires:",o:["UV cure","Na⁺ polarization in glass, 180–500 °C, 200–1500 V","Vacuum only","Eutectic alloy"],a:1,e:"Electrochemical process, Na⁺ drifts to the cathode, Si–O–Si forms at the interface."},
+  {t:"sys",q:"Which material allows moisture through FASTEST?",o:["Metals","Glasses","Silicones","Epoxies"],a:2,e:"Silicones > Epoxies > Fluoro-carbons > Glasses > Metals."},
+  {t:"sys",q:"3D chip stacking uses … for chip-to-chip connections:",o:["Wire bonds only","Through-substrate vias (TSVs)","Optical fibers","Capacitive coupling"],a:1,e:"TSVs pass through the substrate to shorten interconnects and reduce footprint."},
+  {t:"sys",q:"Implantable photovoltaics work best in the:",o:["UV","Visible blue","NIR (near-infrared)","Microwave"],a:2,e:"NIR has the maximum transmittance through tissue."},
+  {t:"sys",q:"SAR formula:",o:["σE²/ρ","ρE²/σ","σ/ρE","E/σρ"],a:0,e:"SAR = σE² / ρ. Tissue T rise < 1–2 °C."},
+  {t:"sys",q:"Fibrotic encapsulation around an implant is:",o:["Always harmful","Bioinert — fixes implant but can insulate electrodes","An immune rejection","A sign of infection"],a:1,e:"No immune response — good for fixation, bad for electrical coupling."},
+  {t:"sys",q:"Silicon direct (fusion) bonding requires:",o:["Only pressure at room temperature","Very smooth, clean, hydrophilic surfaces + high T anneal","A conductive adhesive","Ultrasonic agitation"],a:1,e:"Wafer surfaces are activated, contacted, then annealed (often >1000 °C) to form Si–O–Si bonds."},
+  {t:"sys",q:"Truly hermetic packages are best made from:",o:["Silicones","Epoxies","Metals, glasses, or ceramics","PDMS"],a:2,e:"Polymers always let water vapor through eventually — long-term hermeticity requires inorganic seals."},
+  {t:"sys",q:"The MICS band for medical implants is centered near:",o:["13.56 MHz","402–405 MHz","915 MHz","2.4 GHz"],a:1,e:"Medical Implant Communication Service at ~402 MHz — low power, low tissue loss."},
+  {t:"sys",q:"Near-field inductive wireless power transfer efficiency:",o:["Is constant with distance","Drops steeply as separation grows","Increases at larger gaps","Only works in vacuum"],a:1,e:"Coupling ~ (1/d)³ for magnetic near-field — efficiency plummets beyond coil radius."},
+  {t:"sys",q:"ISO 10993 covers:",o:["Software validation","Biocompatibility testing of medical devices","RF emissions","Sterilization cycles only"],a:1,e:"Family of standards for evaluating in-vitro / in-vivo biological response to device materials."},
+  {t:"sys",q:"Wire bonding attaches a die to a package lead using:",o:["Solder reflow","Thermosonic/ultrasonic Au or Al wire","Epoxy only","TSV plating"],a:1,e:"Heat + ultrasonic energy + pressure deforms a fine wire to make a bond without melting."},
 ];
 const box=document.getElementById('quizBox');
 let state=Q.map(()=>null);
+function shuffleArr(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+let order=shuffleArr(Q.map((_,i)=>i));
+function reshuffle(){order=shuffleArr(Q.map((_,i)=>i));renderQuiz();}
 function renderQuiz(){
-  box.innerHTML=Q.map((q,i)=>`<div class="q-item${state[i]!==null?' answered':''}" data-i="${i}">
-    <div class="q-num">Q${i+1} of ${Q.length}</div>
+  box.innerHTML=order.map((i,pos)=>{
+    const q=Q[i];
+    return `<div class="q-item${state[i]!==null?' answered':''}" data-i="${i}">
+    <div class="q-num">Q${pos+1} of ${Q.length}</div>
     <div class="q-text">${q.q}</div>
     <div class="opts">${q.o.map((op,j)=>{
       let cls='';
@@ -1343,7 +1371,7 @@ function renderQuiz(){
       return `<button data-j="${j}" class="${cls}" ${state[i]!==null?'disabled':''}>${op}</button>`;
     }).join('')}</div>
     <div class="exp">${state[i]===q.a?'Correct.':'Answer: <b>'+q.o[q.a]+'</b>.'} ${q.e}</div>
-  </div>`).join('');
+  </div>`;}).join('');
   box.querySelectorAll('.q-item').forEach(card=>{
     const i=+card.dataset.i;
     card.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
@@ -1359,7 +1387,8 @@ function updateScore(){
   document.getElementById('scoreNum').textContent=`${correct} correct · ${ans} / ${Q.length}`;
   document.getElementById('scoreBar').style.width=(ans/Q.length*100)+'%';
 }
-document.getElementById('resetQuiz').onclick=()=>{state=Q.map(()=>null);renderQuiz();};
+document.getElementById('resetQuiz').onclick=()=>{state=Q.map(()=>null);reshuffle();};
+document.getElementById('shuffleQuiz').onclick=reshuffle;
 renderQuiz();
 
 /* ========== theme ========== */
@@ -2111,8 +2140,8 @@ const sup=n=>String(n).replace(/-/g,'−').replace(/[0-9−]/g,c=>({'0':'⁰','1
 ============================================================ */
 const LS={get(k,d){try{const v=localStorage.getItem('bme:'+k);return v==null?d:JSON.parse(v);}catch(e){return d;}},set(k,v){try{localStorage.setItem('bme:'+k,JSON.stringify(v));}catch(e){}}};
 
-/* Topic tagging for quiz questions — indices 0-based */
-const quizTopic=i=>i<7?'act':i<14?'bio':i<23?'sen':'sys';
+/* Topic tagging for quiz questions — read from each question's .t field */
+const quizTopic=i=>(Q[i]&&Q[i].t)||'act';
 
 /* ---------- Mastery store ---------- */
 const mastery={got:new Set(LS.get('mastery.got',[])),rev:new Set(LS.get('mastery.rev',[]))};
